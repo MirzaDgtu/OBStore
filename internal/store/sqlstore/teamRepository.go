@@ -7,7 +7,7 @@ type TeamRepository struct {
 }
 
 func (r *TeamRepository) Create(u model.Team) (model.Team, error) {
-	err := r.store.db.Create(u).Error
+	err := r.store.db.Create(&u).Error
 	return u, err
 }
 
@@ -17,7 +17,7 @@ func (r *TeamRepository) Update(u model.Team) (model.Team, error) {
 
 func (r *TeamRepository) DeleteById(id int) error {
 	var team model.Team
-	result := r.store.db.Table("teams").Where(&model.Team{Id: id})
+	result := r.store.db.Table("teams").Where("id=?", id)
 	err := result.First(&team).Error
 	if err != nil {
 		return err

@@ -20,7 +20,15 @@ func (r *UserRepository) Create(u model.User) (model.User, error) {
 }
 
 func (r *UserRepository) Update(u model.User) (model.User, error) {
-	return u, r.store.db.Table("users").Save(&u).Error
+	hashPassword(&u.Pass)
+
+	err := r.store.db.Table("users").Save(&u).Error
+	if err != nil {
+		return u, err
+	}
+
+	u.Pass = ""
+	return u, nil
 }
 
 func (r *UserRepository) SignInUser(email, password string) (user model.User, err error) {
@@ -49,7 +57,8 @@ func (r *UserRepository) SignOutUserById(id int) error {
 			ID: uint(id),
 		},
 	}
-	return r.store.db.Table("Customers").Where(&user).Update("loggedin", 0).Error
+
+	return r.store.db.Model(&user).Where("id = ?", id).Update("loggedin", 0).Error
 }
 
 func hashPassword(s *string) error {

@@ -1,0 +1,16 @@
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] POST   /user/signout             --> obstore/internal/apiserver.(*server).SignOutUserById-fm (3 handlers)
+[GIN-debug] POST   /user/update              --> obstore/internal/apiserver.(*server).UpdateUser-fm (3 handlers)
+[GIN-debug] POST   /users                    --> obstore/internal/apiserver.(*server).CreateUser-fm (3 handlers)
+[GIN-debug] POST   /users/signin             --> obstore/internal/apiserver.(*server).SignIn-fm (3 handlers)
+[GIN-debug] POST   /teams                    --> obstore/internal/apiserver.(*server).CreateTeam-fm (3 handlers)
+[GIN-debug] GET    /teams                    --> obstore/internal/apiserver.(*server).GetTeamAll-fm (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8090
+[GIN] 2024/10/09 - 14:50:18 | 201 |      6.4781ms |             ::1 | GET      "/teams"

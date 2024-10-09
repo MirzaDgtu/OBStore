@@ -4,8 +4,7 @@ import "gorm.io/gorm"
 
 type Team struct {
 	gorm.Model
-	Id       int    `gorm:"column:id" json:"id"`
-	NameTeam string `gorm:"column:nameteam" json:"name_team"`
+	NameTeam string `gorm:"column:nameTeam" json:"name_team" validate:"required"`
 }
 
 func (Team) TableName() string {
