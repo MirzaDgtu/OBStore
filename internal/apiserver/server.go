@@ -57,6 +57,19 @@ func (s *server) configureRouter() {
 		teamsGroup.POST("", s.CreateTeam)
 		teamsGroup.GET("", s.GetTeamAll)
 	}
+
+	productGroup := s.router.Group("/product")
+	{
+		productGroup.GET("/find/article", s.GetProductByArticle)
+		productGroup.GET("/find/strikecode", s.GetProductByStrikeCode)
+		productGroup.GET("/find/article", s.GetProductByName)
+	}
+
+	productsGroup := s.router.Group("/products")
+	{
+		productsGroup.POST("", s.CreateProduct)
+		productsGroup.POST("", s.GetProductsAll)
+	}
 }
 
 // User..
@@ -253,4 +266,107 @@ func (s *server) UpdateTeam(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, team)
+}
+
+// Product ...
+
+func (s *server) CreateProduct(ctx *gin.Context) {
+	var products []model.Product
+
+	err := ctx.ShouldBindJSON(&products)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var createdProducts []model.Product
+	for _, product := range products {
+		product, err = s.store.Product().Create(product)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		} else {
+			createdProducts = append(createdProducts, product)
+		}
+	}
+
+	ctx.JSON(http.StatusCreated, createdProducts)
+}
+
+func (s *server) GetProductsAll(ctx *gin.Context) {
+	products, err := s.store.Product().GetAll()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, products)
+}
+
+func (s *server) GetProductByArticle(ctx *gin.Context) {
+	type request struct {
+		Article string `json:"article"`
+	}
+
+	var reqs []request
+	err := ctx.ShouldBind(&reqs)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var findedProduct []model.Product
+	for _, req := range reqs {
+		product, err := s.store.Product().GetByArticle(req.Article)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		} else {
+			findedProduct = append(findedProduct, product)
+		}
+	}
+
+	ctx.JSON(http.StatusOK, findedProduct)
+}
+
+func (s *server) GetProductByStrikeCode(ctx *gin.Context) {
+	type request struct {
+		StrikeCode string `json:"strikecode"`
+	}
+
+	var req request
+	err := ctx.ShouldBind(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	findedProduct, err := s.store.Product().GetByStrikeCode(req.StrikeCode)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, findedProduct)
+}
+
+func (s *server) GetProductByName(ctx *gin.Context) {
+	type request struct {
+		NameArtic string `json:"name_artic"`
+	}
+
+	var req request
+	err := ctx.ShouldBind(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	findedProduct, err := s.store.Product().GetByName(req.NameArtic)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, findedProduct)
 }
