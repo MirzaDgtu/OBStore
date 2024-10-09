@@ -9,4 +9,5 @@ type UserRepository interface {
 	Update(model.User) (model.User, error)
 	SignInUser(username, password string) (model.User, error)
 	SignOutUserById(int) error
+	ChangePassword(int, string) error
 }

@@ -61,6 +61,22 @@ func (r *UserRepository) SignOutUserById(id int) error {
 	return r.store.db.Model(&user).Where("id = ?", id).Update("loggedin", 0).Error
 }
 
+func (r *UserRepository) ChangePassword(id int, pass string) error {
+	err := hashPassword(&pass)
+	if err != nil {
+		return err
+	}
+
+	user := model.User{
+		Model: gorm.Model{
+			ID: uint(id),
+		},
+		Pass: pass,
+	}
+
+	return r.store.db.Model(&user).Where("id = ?", id).Update("pass", pass).Error
+}
+
 func hashPassword(s *string) error {
 	if s == nil {
 		return errors.New("Reference provided for hashing password is nil")

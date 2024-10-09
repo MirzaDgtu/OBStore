@@ -35,6 +35,7 @@ func (s *server) configureRouter() {
 	{
 		userGroup.POST("/signout", s.SignOutUserById)
 		userGroup.POST("/update", s.UpdateUser)
+		userGroup.POST("/pass", s.UpdatePassword)
 	}
 
 	usersGroup := s.router.Group("/users")
@@ -128,6 +129,28 @@ func (s *server) UpdateUser(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, u)
+}
+
+func (s *server) UpdatePassword(ctx *gin.Context) {
+	type request struct {
+		Id   int    `json:"id" validate:"required"`
+		Pass string `json:"pass" validate:"required"`
+	}
+
+	var req request
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = s.store.User().ChangePassword(req.Id, req.Pass)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Password changed successfully"})
 }
 
 // Team...
