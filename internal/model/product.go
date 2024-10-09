@@ -7,7 +7,7 @@ type Product struct {
 	Article    string  `gorm:"column:article" json:"article"`
 	NameArtic  string  `gorm:"column:nameartic" json:"name_artic"`
 	Unit       string  `gorm:"column:unit" json:"unit"`
-	Fasovka    float32 `gorm:"column:fasovka" json:"dasovka"`
+	Fasovka    float32 `gorm:"column:fasovka" json:"fasovka"`
 	TipTovr    string  `gorm:"column:tiptovr" json:"tip_tovr"`
 	Maker      string  `gorm:"column:maker" json:"maker"`
 	Price      float32 `gorm:"column:price" json:"price"`
