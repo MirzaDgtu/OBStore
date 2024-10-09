@@ -68,7 +68,7 @@ func (s *server) configureRouter() {
 	productsGroup := s.router.Group("/products")
 	{
 		productsGroup.POST("", s.CreateProduct)
-		productsGroup.POST("", s.GetProductsAll)
+		productsGroup.GET("", s.GetProductsAll)
 	}
 }
 
