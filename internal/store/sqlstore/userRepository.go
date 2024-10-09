@@ -20,9 +20,11 @@ func (r *UserRepository) Create(u model.User) (model.User, error) {
 }
 
 func (r *UserRepository) Update(u model.User) (model.User, error) {
-	hashPassword(&u.Pass)
 
-	err := r.store.db.Table("users").Save(&u).Error
+	err := r.store.db.Model(&u).Updates(map[string]interface{}{"firstname": u.FirstName,
+		"lastname": u.LastName,
+		"email":    u.Email,
+		"inn":      u.Inn}).Error
 	if err != nil {
 		return u, err
 	}
