@@ -10,7 +10,7 @@ import (
 )
 
 func Start(config *Config) error {
-	db, err := newDB(config.BindAddr)
+	db, err := newDB(config.DatabaseURL)
 	if err != nil {
 		return err
 	}
@@ -32,6 +32,7 @@ func Start(config *Config) error {
 }
 
 func newDB(databaseURL string) (*gorm.DB, error) {
+	fmt.Println(databaseURL)
 	db, err := gorm.Open(mysql.Open(databaseURL), &gorm.Config{})
 	if err != nil {
 		return nil, err
