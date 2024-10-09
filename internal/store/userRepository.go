@@ -1,6 +1,8 @@
 package store
 
-import "obstore/internal/model"
+import (
+	"obstore/internal/model"
+)
 
 type UserRepository interface {
 	Create(model.User) (model.User, error)

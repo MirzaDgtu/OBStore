@@ -1,7 +1,6 @@
 package store
 
 import (
-	"errors"
 	"obstore/internal/model"
 )
 
@@ -12,5 +11,3 @@ type TeamRepository interface {
 	GetById(int) (model.Team, error)
 	GetAll() ([]model.Team, error)
 }
-
-var ErrINVALIDPASSWORD = errors.New("Invalid password")
