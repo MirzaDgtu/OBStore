@@ -8,4 +8,5 @@ type ProductRepository interface {
 	GetByStrikeCode(string) ([]model.Product, error)
 	GetByName(string) ([]model.Product, error)
 	GetAll() ([]model.Product, error)
+	UpdateStrikeCode(int, string) (model.Product, error)
 }

@@ -6,11 +6,21 @@
 
 [GIN-debug] POST   /user/signout             --> obstore/internal/apiserver.(*server).SignOutUserById-fm (3 handlers)
 [GIN-debug] POST   /user/update              --> obstore/internal/apiserver.(*server).UpdateUser-fm (3 handlers)
+[GIN-debug] POST   /user/update/pass         --> obstore/internal/apiserver.(*server).UpdatePassword-fm (3 handlers)
 [GIN-debug] POST   /users                    --> obstore/internal/apiserver.(*server).CreateUser-fm (3 handlers)
 [GIN-debug] POST   /users/signin             --> obstore/internal/apiserver.(*server).SignIn-fm (3 handlers)
+[GIN-debug] GET    /team                     --> obstore/internal/apiserver.(*server).GetTeamById-fm (3 handlers)
+[GIN-debug] POST   /team/delete              --> obstore/internal/apiserver.(*server).DeteleTeamById-fm (3 handlers)
+[GIN-debug] POST   /team/update              --> obstore/internal/apiserver.(*server).UpdateTeam-fm (3 handlers)
 [GIN-debug] POST   /teams                    --> obstore/internal/apiserver.(*server).CreateTeam-fm (3 handlers)
 [GIN-debug] GET    /teams                    --> obstore/internal/apiserver.(*server).GetTeamAll-fm (3 handlers)
+[GIN-debug] GET    /product/find/article     --> obstore/internal/apiserver.(*server).GetProductByArticle-fm (3 handlers)
+[GIN-debug] GET    /product/find/strikecode  --> obstore/internal/apiserver.(*server).GetProductByStrikeCode-fm (3 handlers)
+[GIN-debug] GET    /product/find/name        --> obstore/internal/apiserver.(*server).GetProductByName-fm (3 handlers)
+[GIN-debug] POST   /product/update/strikecode --> obstore/internal/apiserver.(*server).UpdateProductStrikeCodeById-fm (3 handlers)
+[GIN-debug] POST   /products                 --> obstore/internal/apiserver.(*server).CreateProduct-fm (3 handlers)
+[GIN-debug] GET    /products                 --> obstore/internal/apiserver.(*server).GetProductsAll-fm (3 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-[GIN] 2024/10/09 - 14:50:18 | 201 |      6.4781ms |             ::1 | GET      "/teams"
+[GIN] 2024/10/10 - 14:38:36 | 200 |     80.0237ms |             ::1 | POST     "/product/update/strikecode"

@@ -64,19 +64,23 @@ func (r *UserRepository) SignOutUserById(id int) error {
 }
 
 func (r *UserRepository) ChangePassword(id int, pass string) error {
-	err := hashPassword(&pass)
+	var user model.User
+	result := r.store.db.Table("users").Where("id = ?", id)
+	err := result.First(&user).Error
 	if err != nil {
 		return err
 	}
 
-	user := model.User{
-		Model: gorm.Model{
-			ID: uint(id),
-		},
-		Pass: pass,
+	err = hashPassword(&pass)
+	if err != nil {
+		return err
 	}
 
-	return r.store.db.Model(&user).Where("id = ?", id).Update("pass", pass).Error
+	err = result.Update("pass", pass).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func hashPassword(s *string) error {

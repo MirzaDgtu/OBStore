@@ -35,7 +35,7 @@ func (s *server) configureRouter() {
 	{
 		userGroup.POST("/signout", s.SignOutUserById)
 		userGroup.POST("/update", s.UpdateUser)
-		userGroup.POST("/pass", s.UpdatePassword)
+		userGroup.POST("/update/pass", s.UpdatePassword)
 	}
 
 	usersGroup := s.router.Group("/users")
@@ -62,7 +62,8 @@ func (s *server) configureRouter() {
 	{
 		productGroup.GET("/find/article", s.GetProductByArticle)
 		productGroup.GET("/find/strikecode", s.GetProductByStrikeCode)
-		productGroup.GET("/find/article", s.GetProductByName)
+		productGroup.GET("/find/name", s.GetProductByName)
+		productGroup.POST("/update/strikecode", s.UpdateProductStrikeCodeById)
 	}
 
 	productsGroup := s.router.Group("/products")
@@ -309,7 +310,7 @@ func (s *server) GetProductByArticle(ctx *gin.Context) {
 	}
 
 	var reqs []request
-	err := ctx.ShouldBind(&reqs)
+	err := ctx.ShouldBindJSON(&reqs)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -330,18 +331,15 @@ func (s *server) GetProductByArticle(ctx *gin.Context) {
 }
 
 func (s *server) GetProductByStrikeCode(ctx *gin.Context) {
-	type request struct {
-		StrikeCode string `json:"strikecode"`
-	}
+	var product model.Product
 
-	var req request
-	err := ctx.ShouldBind(&req)
+	err := ctx.ShouldBindJSON(&product)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	findedProduct, err := s.store.Product().GetByStrikeCode(req.StrikeCode)
+	findedProduct, err := s.store.Product().GetByStrikeCode(product.StrikeCode)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -356,7 +354,7 @@ func (s *server) GetProductByName(ctx *gin.Context) {
 	}
 
 	var req request
-	err := ctx.ShouldBind(&req)
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -369,4 +367,30 @@ func (s *server) GetProductByName(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, findedProduct)
+}
+
+func (s *server) UpdateProductStrikeCodeById(ctx *gin.Context) {
+	type request struct {
+		Id         int    `json:"id" validate:"required"`
+		StrikeCode string `json:"strikecode" validate:"required"`
+	}
+
+	var reqs []request
+	err := ctx.ShouldBindJSON(&reqs)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+
+	var updatedProduct []model.Product
+	for _, req := range reqs {
+		product, err := s.store.Product().UpdateStrikeCode(req.Id, req.StrikeCode)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			continue
+		} else {
+			updatedProduct = append(updatedProduct, product)
+		}
+	}
+
+	ctx.JSON(http.StatusOK, updatedProduct)
 }
