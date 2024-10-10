@@ -44,13 +44,18 @@ func (r *UserRepository) SignInUser(email, password string) (user model.User, er
 		return user, errors.New("Invalid password")
 	}
 
-	user.Pass = ""
 	err = result.Update("loggedin", 1).Error
 	if err != nil {
 		return user, err
 	}
 
-	return user, result.Find(&user).Error
+	err = result.Find(&user).Error
+	if err != nil {
+		return model.User{}, err
+	}
+
+	user.Pass = ""
+	return user, nil
 }
 
 func (r *UserRepository) SignOutUserById(id int) error {
