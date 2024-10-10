@@ -101,7 +101,7 @@ func (s *server) SignIn(ctx *gin.Context) {
 
 	user, err = s.store.User().SignInUser(user.Email, user.Pass)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": errIncorrectEmailOrPassword.Error()})
 		return
 	}
 

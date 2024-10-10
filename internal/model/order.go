@@ -8,7 +8,6 @@ import (
 
 type Order struct {
 	gorm.Model
-	Id            int            `gorm:"column:id" json:"id"`
 	OrderUid      int            `gorm:"column:orderuid" json:"order_uid"`
 	UnicumNum     int            `gorm:"column:unicumnum" json:"unicum_num"`
 	FolioNum      int            `gorm:"column:foliofum" json:"folio_num"`

@@ -10,7 +10,9 @@ type OrderRepository struct {
 }
 
 func (r *OrderRepository) Create(u model.Order) (order model.Order, err error) {
-	return order, nil
+	err = r.store.db.Create(&u).Error
+
+	return order, err
 }
 
 func (r *OrderRepository) DeleteById(id int) error {
