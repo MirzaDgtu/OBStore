@@ -18,7 +18,7 @@ func (r *ProductRepository) GetAll() (products []model.Product, err error) {
 
 func (r *ProductRepository) GetByArticle(articul string) (product model.Product, err error) {
 	return product, r.store.db.Table("products").Select("*").
-		Where("`article`=?", articul).
+		Where("article=?", articul).
 		Scan(&product).Error
 }
 
