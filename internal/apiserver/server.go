@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"obstore/internal/model"
 	"obstore/internal/store"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -70,6 +71,22 @@ func (s *server) configureRouter() {
 	{
 		productsGroup.POST("", s.CreateProduct)
 		productsGroup.GET("", s.GetProductsAll)
+	}
+
+	orderGroup := s.router.Group("/order")
+	{
+		orderGroup.GET("/find", s.GetOrderById)
+		orderGroup.GET("/find/uid", s.GetOrderByUID)
+		orderGroup.GET("/find/num", s.GetOrderByFolioNum)
+	}
+
+	ordersGroup := s.router.Group("/orders")
+	{
+		ordersGroup.POST("", s.CreateOrder)
+		ordersGroup.GET("", s.GetOrdersAll)
+		ordersGroup.GET("/range", s.GetOrdersByDateRange)
+		ordersGroup.GET("/driver", s.GetOrdersByDriver)
+		ordersGroup.GET("/agent", s.GetOrdersByAgent)
 	}
 }
 
@@ -379,6 +396,7 @@ func (s *server) UpdateProductStrikeCodeById(ctx *gin.Context) {
 	err := ctx.ShouldBindJSON(&reqs)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
 	var updatedProduct []model.Product
@@ -393,4 +411,96 @@ func (s *server) UpdateProductStrikeCodeById(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, updatedProduct)
+}
+
+// Orders ...
+
+func (s *server) CreateOrder(ctx *gin.Context) {
+
+}
+
+func (s *server) GetOrderById(ctx *gin.Context) {
+
+}
+
+func (s *server) GetOrderByUID(ctx *gin.Context) {
+
+}
+
+func (s *server) GetOrderByFolioNum(ctx *gin.Context) {
+
+}
+
+func (s *server) GetOrdersAll(ctx *gin.Context) {
+	orders, err := s.store.Order().GetAll()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, orders)
+}
+
+func (s *server) GetOrdersByDriver(ctx *gin.Context) {
+	type request struct {
+		Driver string `json:"driver"`
+	}
+
+	var req request
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	findedOrders, err := s.store.Order().GetByDriver(req.Driver)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, findedOrders)
+}
+
+func (s *server) GetOrdersByAgent(ctx *gin.Context) {
+	type request struct {
+		Agent string `json:"driver"`
+	}
+
+	var req request
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	findedOrders, err := s.store.Order().GetByAgent(req.Agent)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, findedOrders)
+}
+
+func (s *server) GetOrdersByDateRange(ctx *gin.Context) {
+	type request struct {
+		DtStart  time.Time `json:"dt_start"`
+		DtFinish time.Time `json:"dt_finish"`
+	}
+
+	var req request
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	findedOrders, err := s.store.Order().GetByDateRange(req.DtStart, req.DtFinish)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, findedOrders)
 }
