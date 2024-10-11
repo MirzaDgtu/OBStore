@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"obstore/internal/model"
 	"obstore/internal/store"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -564,8 +563,8 @@ func (s *server) GetOrdersByAgent(ctx *gin.Context) {
 
 func (s *server) GetOrdersByDateRange(ctx *gin.Context) {
 	type request struct {
-		DtStart  time.Time `json:"dt_start"`
-		DtFinish time.Time `json:"dt_finish"`
+		DtStart  string `json:"dt_start"`
+		DtFinish string `json:"dt_finish"`
 	}
 
 	var req request

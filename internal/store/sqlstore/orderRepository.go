@@ -2,7 +2,6 @@ package sqlstore
 
 import (
 	"obstore/internal/model"
-	"time"
 )
 
 type OrderRepository struct {
@@ -44,7 +43,7 @@ func (r *OrderRepository) GetByFolioNum(folioNum int) (order model.Order, err er
 	return order, r.store.db.Where("foliouid = ?", folioNum).Preload("OrderDetails").First(&order).Error
 }
 
-func (r *OrderRepository) GetByDateRange(dtStart, dtFinish time.Time) (orders []model.Order, err error) {
+func (r *OrderRepository) GetByDateRange(dtStart, dtFinish string) (orders []model.Order, err error) {
 	return orders, r.store.db.Where("foliodate BETWEEN ? AND ?", dtStart, dtFinish).
 		Preload("OrderDetails").Find(&orders).Error
 }
