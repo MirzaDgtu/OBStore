@@ -20,8 +20,16 @@
 [GIN-debug] POST   /product/update/strikecode --> obstore/internal/apiserver.(*server).UpdateProductStrikeCodeById-fm (3 handlers)
 [GIN-debug] POST   /products                 --> obstore/internal/apiserver.(*server).CreateProduct-fm (3 handlers)
 [GIN-debug] GET    /products                 --> obstore/internal/apiserver.(*server).GetProductsAll-fm (3 handlers)
+[GIN-debug] GET    /order/find               --> obstore/internal/apiserver.(*server).GetOrderById-fm (3 handlers)
+[GIN-debug] GET    /order/find/uid           --> obstore/internal/apiserver.(*server).GetOrderByUID-fm (3 handlers)
+[GIN-debug] GET    /order/find/num           --> obstore/internal/apiserver.(*server).GetOrderByFolioNum-fm (3 handlers)
+[GIN-debug] POST   /orders                   --> obstore/internal/apiserver.(*server).CreateOrder-fm (3 handlers)
+[GIN-debug] GET    /orders                   --> obstore/internal/apiserver.(*server).GetOrdersAll-fm (3 handlers)
+[GIN-debug] GET    /orders/range             --> obstore/internal/apiserver.(*server).GetOrdersByDateRange-fm (3 handlers)
+[GIN-debug] GET    /orders/driver            --> obstore/internal/apiserver.(*server).GetOrdersByDriver-fm (3 handlers)
+[GIN-debug] GET    /orders/agent             --> obstore/internal/apiserver.(*server).GetOrdersByAgent-fm (3 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-[GIN] 2024/10/10 - 14:49:33 | 200 |     97.3921ms |             ::1 | POST     "/users/signin"
-[GIN] 2024/10/10 - 14:50:30 | 200 |     23.7806ms |             ::1 | POST     "/user/signout"
+[GIN-debug] [WARNING] Headers were already written. Wanted to override status code 500 with 201
+[GIN] 2024/10/11 - 07:42:20 | 500 |      2.6927ms |             ::1 | POST     "/orders"

@@ -7,7 +7,6 @@ import (
 
 type OrderRepository interface {
 	Create(model.Order) (model.Order, error)
-	DeleteById(int) error
 	Update(model.Order) (model.Order, error)
 	GetAll() ([]model.Order, error)
 	GetById(int) (model.Order, error)

@@ -416,7 +416,26 @@ func (s *server) UpdateProductStrikeCodeById(ctx *gin.Context) {
 // Orders ...
 
 func (s *server) CreateOrder(ctx *gin.Context) {
+	var reqs []model.Order
 
+	err := ctx.ShouldBindJSON(&reqs)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var createdOrders []model.Order
+	for _, req := range reqs {
+		order, err := s.store.Order().Create(req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			continue
+		} else {
+			createdOrders = append(createdOrders, order)
+		}
+	}
+
+	ctx.JSON(http.StatusCreated, createdOrders)
 }
 
 func (s *server) GetOrderById(ctx *gin.Context) {
