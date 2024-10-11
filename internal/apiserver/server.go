@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"obstore/internal/model"
 	"obstore/internal/store"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -189,7 +188,7 @@ func (s *server) UpdatePassword(ctx *gin.Context) {
 func (s *server) CreateTeam(ctx *gin.Context) {
 	var teams []model.Team
 
-	err := ctx.ShouldBind(&teams)
+	err := ctx.ShouldBindJSON(&teams)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -225,13 +224,13 @@ func (s *server) GetTeamById(ctx *gin.Context) {
 	}
 
 	var reqs []request
-	err := ctx.ShouldBind(&reqs)
+	err := ctx.ShouldBindJSON(&reqs)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var teams []model.Team
+	var findedTeams []model.Team
 
 	for _, req := range reqs {
 		team, err := s.store.Team().GetById(req.Id)
@@ -239,11 +238,11 @@ func (s *server) GetTeamById(ctx *gin.Context) {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			continue
 		} else {
-			teams = append(teams, team)
+			findedTeams = append(findedTeams, team)
 		}
 	}
 
-	ctx.JSON(http.StatusOK, teams)
+	ctx.JSON(http.StatusOK, findedTeams)
 }
 
 func (s *server) DeteleTeamById(ctx *gin.Context) {
@@ -252,7 +251,7 @@ func (s *server) DeteleTeamById(ctx *gin.Context) {
 	}
 
 	var reqs []request
-	err := ctx.ShouldBind(&reqs)
+	err := ctx.ShouldBindJSON(&reqs)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -416,19 +415,98 @@ func (s *server) UpdateProductStrikeCodeById(ctx *gin.Context) {
 // Orders ...
 
 func (s *server) CreateOrder(ctx *gin.Context) {
+	var reqs []model.Order
 
+	err := ctx.ShouldBindJSON(&reqs)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var createdOrders []model.Order
+	for _, req := range reqs {
+		order, err := s.store.Order().Create(req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			continue
+		} else {
+			createdOrders = append(createdOrders, order)
+		}
+	}
+
+	ctx.JSON(http.StatusCreated, createdOrders)
 }
 
 func (s *server) GetOrderById(ctx *gin.Context) {
+	type request struct {
+		OrderId int `json:"order_id" validate: "required"`
+	}
 
+	var reqs []request
+	err := ctx.ShouldBind(&reqs)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	var orders []model.Order
+
+	for _, req := range reqs {
+		order, err := s.store.Order().GetById(req.OrderId)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			continue
+		} else {
+			orders = append(orders, order)
+		}
+	}
 }
 
 func (s *server) GetOrderByUID(ctx *gin.Context) {
+	type request struct {
+		OrderUID int `json:"order_uid" validate: "required"`
+	}
 
+	var reqs []request
+	err := ctx.ShouldBind(&reqs)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	var orders []model.Order
+
+	for _, req := range reqs {
+		order, err := s.store.Order().GetByOrderUID(req.OrderUID)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			continue
+		} else {
+			orders = append(orders, order)
+		}
+	}
 }
 
 func (s *server) GetOrderByFolioNum(ctx *gin.Context) {
+	type request struct {
+		FolioNum int `json:"folio_num" validate: "required"`
+	}
 
+	var reqs []request
+	err := ctx.ShouldBind(&reqs)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	var orders []model.Order
+
+	for _, req := range reqs {
+		order, err := s.store.Order().GetByFolioNum(req.FolioNum)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			continue
+		} else {
+			orders = append(orders, order)
+		}
+	}
 }
 
 func (s *server) GetOrdersAll(ctx *gin.Context) {
@@ -464,7 +542,7 @@ func (s *server) GetOrdersByDriver(ctx *gin.Context) {
 
 func (s *server) GetOrdersByAgent(ctx *gin.Context) {
 	type request struct {
-		Agent string `json:"driver"`
+		Agent string `json:"agent"`
 	}
 
 	var req request
@@ -485,8 +563,8 @@ func (s *server) GetOrdersByAgent(ctx *gin.Context) {
 
 func (s *server) GetOrdersByDateRange(ctx *gin.Context) {
 	type request struct {
-		DtStart  time.Time `json:"dt_start"`
-		DtFinish time.Time `json:"dt_finish"`
+		DtStart  string `json:"dt_start"`
+		DtFinish string `json:"dt_finish"`
 	}
 
 	var req request

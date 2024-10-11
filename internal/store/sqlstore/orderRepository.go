@@ -2,7 +2,6 @@ package sqlstore
 
 import (
 	"obstore/internal/model"
-	"time"
 )
 
 type OrderRepository struct {
@@ -22,48 +21,37 @@ func (r *OrderRepository) Update(u model.Order) (order model.Order, err error) {
 func (r *OrderRepository) GetAll() (orders []model.Order, err error) {
 
 	return orders, r.store.db.Table("orders").Select("*").
-		Joins("orderdetails on orderdetails.orderuid = orders.orderuid").
+		Joins("LEFT JOIN orderdetails on orderdetails.orderid = orders.id").
 		Scan(&orders).Error
 }
 
 func (r *OrderRepository) GetById(id int) (order model.Order, err error) {
 	return order, r.store.db.Table("orders").Select("*").
-		Joins("orderdetails on orderdetails.orderuid = orders.orderuid").
+		Joins("LEFT JOIN orderdetails on orderdetails.orderid = orders.id").
 		Where("id = ?", id).
 		Scan(&order).Error
 }
 
 func (r *OrderRepository) GetByOrderUID(uid int) (order model.Order, err error) {
 	return order, r.store.db.Table("orders").Select("*").
-		Joins("orderdetails on orderdetails.orderuid = orders.orderuid").
+		Joins("LEFT JOIN orderdetails on orderdetails.orderid = orders.id").
 		Where("orderuid = ?", uid).
 		Scan(&order).Error
 }
 
 func (r *OrderRepository) GetByFolioNum(folioNum int) (order model.Order, err error) {
-	return order, r.store.db.Table("orders").Select("*").
-		Joins("orderdetails on orderdetails.orderuid = orders.orderuid").
-		Where("foliouid = ?", folioNum).
-		Scan(&order).Error
+	return order, r.store.db.Where("foliouid = ?", folioNum).Preload("OrderDetails").First(&order).Error
 }
 
-func (r *OrderRepository) GetByDateRange(dtStart, dtFinish time.Time) (orders []model.Order, err error) {
-	return orders, r.store.db.Table("orders").Select("*").
-		Joins("orderdetails on orderdetails.orderuid = orders.orderuid").
-		Where("foliodate BETWEEN ? AND ?", dtStart, dtFinish).
-		Scan(&orders).Error
+func (r *OrderRepository) GetByDateRange(dtStart, dtFinish string) (orders []model.Order, err error) {
+	return orders, r.store.db.Where("foliodate BETWEEN ? AND ?", dtStart, dtFinish).
+		Preload("OrderDetails").Find(&orders).Error
 }
 
 func (r *OrderRepository) GetByDriver(driver string) (orders []model.Order, err error) {
-	return orders, r.store.db.Table("orders").Select("*").
-		Joins("orderdetails on orderdetails.orderuid = orders.orderuid").
-		Where("driver = ?", driver).
-		Scan(&orders).Error
+	return orders, r.store.db.Where("orders.Driver LIKE ?", "%"+driver+"%").Preload("OrderDetails").Find(&orders).Error
 }
 
 func (r *OrderRepository) GetByAgent(agent string) (orders []model.Order, err error) {
-	return orders, r.store.db.Table("orders").Select("*").
-		Joins("orderdetails on orderdetails.orderuid = orders.orderuid").
-		Where("agent = ?", agent).
-		Scan(&orders).Error
+	return orders, r.store.db.Where("orders.Agent LIKE ?", "%"+agent+"%").Preload("OrderDetails").Find(&orders).Error
 }

@@ -26,7 +26,8 @@ func (r *TeamRepository) DeleteById(id int) error {
 }
 
 func (r *TeamRepository) GetById(id int) (team model.Team, err error) {
-	return team, r.store.db.Table("teams").Select("*").Where("id=?", id).Scan(team).Error
+	team.ID = uint(id)
+	return team, r.store.db.First(&team).Error
 }
 
 func (r *TeamRepository) GetAll() (teams []model.Team, err error) {
