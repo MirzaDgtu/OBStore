@@ -27,7 +27,7 @@ type Order struct {
 	FinishAt      *time.Time     `gorm:"column:finishAt" json:"finish_at"`
 	Done          bool           `gorm:"column:done" json:"done"`
 	Status        int            `gorm:"column:status" json:"status"`
-	OrderDetails  []OrderDetails `gorm:"foreignKey:OrderUID" json:"order_details"`
+	OrderDetails  []OrderDetails `gorm:"foreignKey:OrderId" json:"order_details"`
 }
 
 func (Order) TableName() string {

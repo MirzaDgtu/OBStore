@@ -8,6 +8,7 @@ import (
 
 type OrderDetails struct {
 	gorm.Model
+	OrderId     int        `gorm:"column:orderid" json:"order_id"`
 	OrderUID    int        `gorm:"column:orderuid" json:"order_uid"`
 	Articul     string     `gorm:"column:articul" json:"articul"`
 	NameArticul string     `gorm:"column:namearticul" json:"name_articul"`
