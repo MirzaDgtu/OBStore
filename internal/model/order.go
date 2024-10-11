@@ -16,7 +16,7 @@ type Order struct {
 	OrderSum      float64        `gorm:"column:ordersum" json:"order_sum"`
 	FolioSum      float64        `gorm:"column:foliosum" json:"folio_sum"`
 	Driver        string         `gorm:"column:driver" json:"driver"`
-	Agent         string         `gorm:"column:agent" json:"agent"`
+	Agent         string         `gorm:"column:Agent" json:"agent"`
 	Brieforg      string         `gorm:"column:brieforg" json:"brieforg"`
 	ClientId      int            `gorm:"column:clientId" json:"client_Id"`
 	ClientName    string         `gorm:"column:clientName" json:"client_name"`
