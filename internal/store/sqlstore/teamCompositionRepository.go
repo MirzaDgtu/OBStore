@@ -21,8 +21,8 @@ func (r *TeamCompositionRepository) DeleteById(id int) error {
 	return r.store.db.Delete(&tc).Error
 }
 
-func (r *TeamCompositionRepository) Update(teamComposition model.TeamComposition) (tc model.TeamComposition, err error) {
-	return
+func (r *TeamCompositionRepository) Update(teamComposition model.TeamComposition) (model.TeamComposition, error) {
+	return teamComposition, r.store.db.Save(&teamComposition).Error
 }
 
 func (r *TeamCompositionRepository) GetAll() (tcs []model.TeamComposition, err error) {

@@ -7,11 +7,12 @@ import (
 )
 
 type Store struct {
-	db                *gorm.DB
-	userRepository    *UserRepository
-	teamRepository    *TeamRepository
-	orderRepository   *OrderRepository
-	productRepository *ProductRepository
+	db                        *gorm.DB
+	userRepository            *UserRepository
+	teamRepository            *TeamRepository
+	orderRepository           *OrderRepository
+	productRepository         *ProductRepository
+	teamCompositionRepository *TeamCompositionRepository
 }
 
 func New(db *gorm.DB) *Store {
@@ -66,4 +67,16 @@ func (s *Store) Product() store.ProductRepository {
 	}
 
 	return s.productRepository
+}
+
+func (s *Store) TeamComposition() store.TeamCompositionRepository {
+	if s.teamCompositionRepository != nil {
+		return s.teamCompositionRepository
+	}
+
+	s.teamCompositionRepository = &TeamCompositionRepository{
+		store: s,
+	}
+
+	return s.teamCompositionRepository
 }

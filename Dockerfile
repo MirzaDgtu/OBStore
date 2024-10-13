@@ -1,7 +1,7 @@
 FROM golang:1.23.1
 
 # Set destination for COPY
-WORKDIR /internal
+WORKDIR D:\Projects\Go\OBStore
 
 # Download Go modules
 COPY go.mod go.sum ./

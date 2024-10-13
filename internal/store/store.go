@@ -5,4 +5,5 @@ type Store interface {
 	Team() TeamRepository
 	Order() OrderRepository
 	Product() ProductRepository
+	TeamComposition() TeamCompositionRepository
 }
