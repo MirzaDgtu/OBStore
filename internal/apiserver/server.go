@@ -31,61 +31,83 @@ func newServer(store store.Store) *server {
 }
 
 func (s *server) configureRouter() {
-	userGroup := s.router.Group("/user")
+
+	// Маршруты для API
+	apiGroup := s.router.Group("/api/v1")
 	{
-		userGroup.POST("/signout", s.SignOutUserById)
-		userGroup.POST("/update", s.UpdateUser)
-		userGroup.POST("/update/pass", s.UpdatePassword)
+		userGroup := apiGroup.Group("/user")
+		{
+			userGroup.POST("/signout", s.SignOutUserById)
+			userGroup.POST("/update", s.UpdateUser)
+			userGroup.POST("/update/pass", s.UpdatePassword)
+		}
+
+		usersGroup := apiGroup.Group("/users")
+		{
+			usersGroup.POST("", s.CreateUser)
+			usersGroup.POST("/signin", s.SignIn)
+		}
+
+		teamGroup := apiGroup.Group("/team")
+		{
+			teamGroup.GET("", s.GetTeamById)
+			teamGroup.POST("/delete", s.DeteleTeamById)
+			teamGroup.POST("/update", s.UpdateTeam)
+
+		}
+
+		teamsGroup := apiGroup.Group("/teams")
+		{
+			teamsGroup.POST("", s.CreateTeam)
+			teamsGroup.GET("", s.GetTeamAll)
+		}
+
+		productGroup := apiGroup.Group("/product")
+		{
+			productGroup.GET("/find/article", s.GetProductByArticle)
+			productGroup.GET("/find/strikecode", s.GetProductByStrikeCode)
+			productGroup.GET("/find/name", s.GetProductByName)
+			productGroup.POST("/update/strikecode", s.UpdateProductStrikeCodeById)
+		}
+
+		productsGroup := apiGroup.Group("/products")
+		{
+			productsGroup.POST("", s.CreateProduct)
+			productsGroup.GET("", s.GetProductsAll)
+		}
+
+		orderGroup := apiGroup.Group("/order")
+		{
+			orderGroup.GET("/find", s.GetOrderById)
+			orderGroup.GET("/find/uid", s.GetOrderByUID)
+			orderGroup.GET("/find/num", s.GetOrderByFolioNum)
+		}
+
+		ordersGroup := apiGroup.Group("/orders")
+		{
+			ordersGroup.POST("", s.CreateOrder)
+			ordersGroup.GET("", s.GetOrdersAll)
+			ordersGroup.GET("/range", s.GetOrdersByDateRange)
+			ordersGroup.GET("/driver", s.GetOrdersByDriver)
+			ordersGroup.GET("/agent", s.GetOrdersByAgent)
+		}
 	}
 
-	usersGroup := s.router.Group("/users")
+	// Маршруты для сайта
+	viewGroup := s.router.Group("/view")
 	{
-		usersGroup.POST("", s.CreateUser)
-		usersGroup.POST("/signin", s.SignIn)
-	}
+		userGroup := viewGroup.Group("/user")
+		{
+			userGroup.POST("/signout", s.SignOutUserById)
+			userGroup.POST("/update", s.UpdateUser)
+			userGroup.POST("/update/pass", s.UpdatePassword)
+		}
 
-	teamGroup := s.router.Group("/team")
-	{
-		teamGroup.GET("", s.GetTeamById)
-		teamGroup.POST("/delete", s.DeteleTeamById)
-		teamGroup.POST("/update", s.UpdateTeam)
-
-	}
-
-	teamsGroup := s.router.Group("/teams")
-	{
-		teamsGroup.POST("", s.CreateTeam)
-		teamsGroup.GET("", s.GetTeamAll)
-	}
-
-	productGroup := s.router.Group("/product")
-	{
-		productGroup.GET("/find/article", s.GetProductByArticle)
-		productGroup.GET("/find/strikecode", s.GetProductByStrikeCode)
-		productGroup.GET("/find/name", s.GetProductByName)
-		productGroup.POST("/update/strikecode", s.UpdateProductStrikeCodeById)
-	}
-
-	productsGroup := s.router.Group("/products")
-	{
-		productsGroup.POST("", s.CreateProduct)
-		productsGroup.GET("", s.GetProductsAll)
-	}
-
-	orderGroup := s.router.Group("/order")
-	{
-		orderGroup.GET("/find", s.GetOrderById)
-		orderGroup.GET("/find/uid", s.GetOrderByUID)
-		orderGroup.GET("/find/num", s.GetOrderByFolioNum)
-	}
-
-	ordersGroup := s.router.Group("/orders")
-	{
-		ordersGroup.POST("", s.CreateOrder)
-		ordersGroup.GET("", s.GetOrdersAll)
-		ordersGroup.GET("/range", s.GetOrdersByDateRange)
-		ordersGroup.GET("/driver", s.GetOrdersByDriver)
-		ordersGroup.GET("/agent", s.GetOrdersByAgent)
+		usersGroup := userGroup.Group("/users")
+		{
+			usersGroup.POST("", s.CreateUser)
+			usersGroup.POST("/signin", s.SignIn)
+		}
 	}
 }
 
