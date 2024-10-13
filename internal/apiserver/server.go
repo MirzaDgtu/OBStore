@@ -2,6 +2,7 @@ package apiserver
 
 import (
 	"errors"
+	"html/template"
 	"net/http"
 	"obstore/internal/model"
 	"obstore/internal/store"
@@ -31,6 +32,9 @@ func newServer(store store.Store) *server {
 }
 
 func (s *server) configureRouter() {
+
+	s.router.LoadHTMLGlob("frontend/login/*")
+	s.router.StaticFS("frontend/login/style.css", http.Dir("/frontend/login"))
 
 	// Маршруты для API
 	apiGroup := s.router.Group("/api/v1")
@@ -96,6 +100,15 @@ func (s *server) configureRouter() {
 	// Маршруты для сайта
 	viewGroup := s.router.Group("/view")
 	{
+
+		h1 := func(ctx *gin.Context) {
+			tmpl := template.Must(template.ParseFiles("frontend/login/login.html"))
+			tmpl = template.Must(template.ParseFiles("frontend/login/style.css"))
+			tmpl.Execute(ctx.Writer, nil)
+		}
+
+		viewGroup.GET("/login", h1)
+
 		userGroup := viewGroup.Group("/user")
 		{
 			userGroup.POST("/signout", s.SignOutUserById)
