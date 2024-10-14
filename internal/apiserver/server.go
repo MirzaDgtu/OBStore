@@ -103,7 +103,7 @@ func (s *server) configureRouter() {
 
 		h1 := func(ctx *gin.Context) {
 			tmpl := template.Must(template.ParseFiles("frontend/login/login.html"))
-			tmpl = template.Must(template.ParseFiles("frontend/login/style.css"))
+
 			tmpl.Execute(ctx.Writer, nil)
 		}
 
