@@ -95,6 +95,19 @@ func (s *server) configureRouter() {
 			ordersGroup.GET("/driver", s.GetOrdersByDriver)
 			ordersGroup.GET("/agent", s.GetOrdersByAgent)
 		}
+
+		teamCompositionGroup := apiGroup.Group("/teamcomposition")
+		{
+			teamCompositionGroup.POST("/update", s.UpdateTeamComposition)
+			teamCompositionGroup.GET("/team", s.GetTeamCompositionById)
+
+		}
+
+		teamCompositionsGroup := apiGroup.Group("/teamcompositions")
+		{
+			teamCompositionsGroup.POST("", s.CreateTeamComposition)
+
+		}
 	}
 
 	// Маршруты для сайта
@@ -616,4 +629,67 @@ func (s *server) GetOrdersByDateRange(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, findedOrders)
+}
+
+// Team Compositions
+
+func (s *server) CreateTeamComposition(ctx *gin.Context) {
+	var reqs []model.TeamComposition
+
+	err := ctx.ShouldBindJSON(&reqs)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var createdTS []model.TeamComposition
+	for _, req := range reqs {
+		ts, err := s.store.TeamComposition().Create(req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			continue
+		} else {
+			createdTS = append(createdTS, ts)
+		}
+	}
+
+	ctx.JSON(http.StatusCreated, createdTS)
+}
+
+func (s *server) GetTeamCompositionById(ctx *gin.Context) {
+	type request struct {
+		ID int `json:"id"`
+	}
+
+	var req request
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	tsc, err := s.store.TeamComposition().GetByTeamId(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, tsc)
+}
+
+func (s *server) UpdateTeamComposition(ctx *gin.Context) {
+	var ts model.TeamComposition
+	err := ctx.ShouldBindJSON(&ts)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ts, err = s.store.TeamComposition().Update(ts)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, ts)
 }
