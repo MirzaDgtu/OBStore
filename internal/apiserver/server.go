@@ -50,6 +50,7 @@ func (s *server) configureRouter() {
 		{
 			usersGroup.POST("", s.CreateUser)
 			usersGroup.POST("/signin", s.SignIn)
+			usersGroup.GET("", s.GetUserAll)
 		}
 
 		teamGroup := apiGroup.Group("/team")
@@ -232,6 +233,16 @@ func (s *server) UpdatePassword(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Password changed successfully"})
+}
+
+func (s *server) GetUserAll(ctx *gin.Context) {
+	users, err := s.store.User().GetAll()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, users)
 }
 
 // Team...
