@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="/frontend/warehouse.png">
+    <title>{{ .title }}</title>
+</head>
+
+<body>
+    <div class="container" id="container">
+        <div class="form-container sign-up">
+            <form>
+                <h1>Регистрация</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-vk"></i></a>
+                </div>
+                <span>или используйте email</span>
+                <input type="text" placeholder="Фамилия">
+                <input type="text" placeholder="Имя">
+                <input type="email" placeholder="Email">
+                <input type="password" placeholder="Пароль">
+                <input type="text" placeholder="ИНН">
+                <button>Создать аккаунт</button>
+            </form>
+        </div>
+        <div class="form-container sign-in">
+            <form>
+                <h1>Вход</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-vk"></i></a>
+                </div>
+                <span>или используйте email и пароль</span>
+                <input type="email" placeholder="Email">
+                <input type="password" placeholder="Пароль">
+                <a href="#">Запомнить пароль?</a>
+                <button>Войти</button>
+            </form>
+        </div>
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Добро пожаловать</h1>
+                    <p>Если у вас есть аккаунт, то введите данные для входа</p>
+                    <button class="hidden" id="login">Войти</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Добро пожаловать</h1>
+                    <p>Введите данные для регистрации, чтобы вы могли воспользоваться всем функционалом сайта</p>
+                    <button class="hidden" id="register">Создать аккаунт</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+version: '4.34.2'
+
+services:
+  OBStore: 
+    build: ./
+    command: ./OBStore
+    ports:      
+      - 8090:8090
+    depends_on:
+      - db
+    environment:
+      - name=value
+
+  db: 
+    restart: always
+    image: mysql:latest
+    volumes:
+      - /data:/var/lib/mysql
+    environment:
+      - ROOT_PASSWORD=pmp1226
+      - MYSQL_USER=pmp
+      - MYSQL_PASSWORD=pmp1226
+      - MYSQL_DATABASE=orderbuilds
+
+    ports:
+            - 3306:3306  
