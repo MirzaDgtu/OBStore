@@ -36,3 +36,7 @@ func (r *TeamCompositionRepository) GetByUserId(userId int) (tcs []model.TeamCom
 func (r *TeamCompositionRepository) GetByTeamId(idTeam int) (tcs []model.TeamComposition, err error) {
 	return tcs, r.store.db.Where(&model.TeamComposition{TeamId: idTeam}).Find(&tcs).Error
 }
+
+func (r *TeamCompositionRepository) GetByID(id uint) (ts model.TeamComposition, err error) {
+	return ts, r.store.db.First(&ts, id).Error
+}

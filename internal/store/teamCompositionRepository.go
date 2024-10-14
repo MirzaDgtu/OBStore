@@ -9,4 +9,5 @@ type TeamCompositionRepository interface {
 	GetAll() ([]model.TeamComposition, error)
 	GetByUserId(int) ([]model.TeamComposition, error)
 	GetByTeamId(int) ([]model.TeamComposition, error)
+	GetByID(uint) (model.TeamComposition, error)
 }

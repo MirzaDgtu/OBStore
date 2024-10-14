@@ -82,7 +82,7 @@ func (s *server) configureRouter() {
 
 		orderGroup := apiGroup.Group("/order")
 		{
-			orderGroup.GET("/find", s.GetOrderById)
+			orderGroup.GET("/find/id", s.GetOrderById)
 			orderGroup.GET("/find/uid", s.GetOrderByUID)
 			orderGroup.GET("/find/num", s.GetOrderByFolioNum)
 		}
@@ -98,14 +98,17 @@ func (s *server) configureRouter() {
 
 		teamCompositionGroup := apiGroup.Group("/teamcomposition")
 		{
+			teamCompositionGroup.GET("/", s.GetTeamCompositionById)
 			teamCompositionGroup.POST("/update", s.UpdateTeamComposition)
-			teamCompositionGroup.GET("/team", s.GetTeamCompositionById)
+			teamCompositionGroup.GET("/team", s.GetTeamCompositionByTeamId)
+			teamCompositionGroup.GET("/user", s.GetTeamCompositionByUserId)
 
 		}
 
 		teamCompositionsGroup := apiGroup.Group("/teamcompositions")
 		{
 			teamCompositionsGroup.POST("", s.CreateTeamComposition)
+			teamCompositionsGroup.GET("", s.GetTeamCompositionAll)
 
 		}
 	}
@@ -668,7 +671,7 @@ func (s *server) GetTeamCompositionById(ctx *gin.Context) {
 		return
 	}
 
-	tsc, err := s.store.TeamComposition().GetByTeamId(req.ID)
+	tsc, err := s.store.TeamComposition().GetByID(uint(req.ID))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -692,4 +695,56 @@ func (s *server) UpdateTeamComposition(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, ts)
+}
+
+func (s *server) GetTeamCompositionByTeamId(ctx *gin.Context) {
+	type request struct {
+		ID int `json:"id"`
+	}
+
+	var req request
+	err := ctx.ShouldBindQuery(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ts, err := s.store.TeamComposition().GetByTeamId(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, ts)
+}
+
+func (s *server) GetTeamCompositionAll(ctx *gin.Context) {
+	tcs, err := s.store.TeamComposition().GetAll()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, tcs)
+}
+
+func (s *server) GetTeamCompositionByUserId(ctx *gin.Context) {
+	type request struct {
+		UserID int `json:"user_id"`
+	}
+
+	var req request
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	tcs, err := s.store.TeamComposition().GetByUserId(req.UserID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, tcs)
 }
