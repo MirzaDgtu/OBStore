@@ -2,7 +2,6 @@ package apiserver
 
 import (
 	"errors"
-	"html/template"
 	"net/http"
 	"obstore/internal/model"
 	"obstore/internal/store"
@@ -117,15 +116,6 @@ func (s *server) configureRouter() {
 	// Маршруты для сайта
 	viewGroup := s.router.Group("/view")
 	{
-
-		h1 := func(ctx *gin.Context) {
-			tmpl := template.Must(template.ParseFiles("frontend/login/login.html"))
-
-			tmpl.Execute(ctx.Writer, nil)
-		}
-
-		viewGroup.GET("/login", h1)
-
 		userGroup := viewGroup.Group("/user")
 		{
 			userGroup.POST("/signout", s.SignOutUserById)
