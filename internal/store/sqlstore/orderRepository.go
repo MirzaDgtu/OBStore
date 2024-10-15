@@ -28,7 +28,7 @@ func (r *OrderRepository) GetAll() (orders []model.Order, err error) {
 func (r *OrderRepository) GetById(id int) (order model.Order, err error) {
 	return order, r.store.db.Table("orders").Select("*").
 		Joins("LEFT JOIN orderdetails on orderdetails.orderid = orders.id").
-		Where("id = ?", id).
+		Where("orders.id = ?", id).
 		Scan(&order).Error
 }
 

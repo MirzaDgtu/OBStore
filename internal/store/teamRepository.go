@@ -10,4 +10,5 @@ type TeamRepository interface {
 	DeleteById(int) error
 	GetById(int) (model.Team, error)
 	GetAll() ([]model.Team, error)
+	TeamComposition(uint) (model.Team, error)
 }

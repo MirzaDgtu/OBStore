@@ -33,3 +33,11 @@ func (r *TeamRepository) GetById(id int) (team model.Team, err error) {
 func (r *TeamRepository) GetAll() (teams []model.Team, err error) {
 	return teams, r.store.db.Table("teams").Select("*").Scan(&teams).Error
 }
+
+func (r *TeamRepository) TeamComposition(id uint) (tc model.Team, err error) {
+	return tc, r.store.db.Table("teams").Select("teams.id as teamId, teams.nameTeam, u.id as userId, CONCAT(u.firstname, ' ', u.lastname) as userName, u.inn").
+		Joins("left join teamcompositions as tc on tc.teamId = teams.id").
+		Joins("left join users as u on u.id = tc.userId").
+		Where("teams.id=?", id).Scan(&tc).Error
+
+}

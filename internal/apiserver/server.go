@@ -59,6 +59,7 @@ func (s *server) configureRouter() {
 			teamGroup.GET("", s.GetTeamById)
 			teamGroup.POST("/delete", s.DeteleTeamById)
 			teamGroup.POST("/update", s.UpdateTeam)
+			teamGroup.GET("/teamcomposition", s.GetTeamComposition)
 
 		}
 
@@ -495,7 +496,7 @@ func (s *server) CreateOrder(ctx *gin.Context) {
 
 func (s *server) GetOrderById(ctx *gin.Context) {
 	type request struct {
-		OrderId int `json:"order_id" validate: "required"`
+		ID int `json:"id" validate: "required"`
 	}
 
 	var reqs []request
@@ -507,7 +508,7 @@ func (s *server) GetOrderById(ctx *gin.Context) {
 	var orders []model.Order
 
 	for _, req := range reqs {
-		order, err := s.store.Order().GetById(req.OrderId)
+		order, err := s.store.Order().GetById(req.ID)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			continue
@@ -758,4 +759,31 @@ func (s *server) GetTeamCompositionByUserId(ctx *gin.Context) {
 func (s *server) LoginHTML(ctx *gin.Context) {
 	ctx.HTML(http.StatusOK, "login.html", gin.H{
 		"title": "ТД Восток"})
+}
+
+// team
+func (s *server) GetTeamComposition(ctx *gin.Context) {
+	type request struct {
+		ID uint `json:"id"`
+	}
+
+	var reqs []request
+	err := ctx.ShouldBindJSON(&reqs)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+
+	var findedTC []model.Team
+	for _, req := range reqs {
+		tc, err := s.store.Team().TeamComposition(req.ID)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
+			continue
+		} else {
+			findedTC = append(findedTC, tc)
+		}
+	}
+
+	ctx.JSON(http.StatusOK, findedTC)
 }
