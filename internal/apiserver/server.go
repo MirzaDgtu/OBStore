@@ -32,8 +32,10 @@ func newServer(store store.Store) *server {
 
 func (s *server) configureRouter() {
 
-	s.router.LoadHTMLGlob("frontend/login/*")
-	s.router.StaticFS("frontend/login/style.css", http.Dir("/frontend/login"))
+	s.router.Static("/css", "./frontend/css/")
+	s.router.StaticFS("/scripts", http.Dir("./frontend/scripts"))
+	s.router.StaticFile("/favicon.png", "./fronend/warehouse.png")
+	s.router.LoadHTMLGlob("frontend/templates/*.html")
 
 	// Маршруты для API
 	apiGroup := s.router.Group("/api/v1")
@@ -116,6 +118,8 @@ func (s *server) configureRouter() {
 	// Маршруты для сайта
 	viewGroup := s.router.Group("/view")
 	{
+		viewGroup.GET("/login", s.LoginHTML)
+
 		userGroup := viewGroup.Group("/user")
 		{
 			userGroup.POST("/signout", s.SignOutUserById)
@@ -748,4 +752,10 @@ func (s *server) GetTeamCompositionByUserId(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, tcs)
+}
+
+// Site ...
+func (s *server) LoginHTML(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "login.html", gin.H{
+		"title": "ТД Восток"})
 }
