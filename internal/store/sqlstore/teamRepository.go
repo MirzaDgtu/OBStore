@@ -35,21 +35,14 @@ func (r *TeamRepository) GetAll() (teams []model.Team, err error) {
 }
 
 func (r *TeamRepository) TeamComposition(id uint) (tc model.Team, err error) {
-	return tc, r.store.db.Table("teams").Select("teams.id as teamId, teams.nameTeam, u.id as userId, CONCAT(u.firstname, ' ', u.lastname) as userName, u.inn").
-		Joins("left join teamcompositions as tc on tc.teamId = teams.id").
-		Joins("left join users as u on u.id = tc.userId").
-		Where("teams.id=?", id).Scan(&tc).Error
+	err = r.store.db.Where("id=?", id).Preload("Users").Find(&tc).Error
+	if err != nil {
+		return tc, err
+	}
 
-	//db.Preload("TeamCompositions").First(&team, teamID).Error; - Попробовать завтра
+	for _, element := range tc.Users {
+		element.Pass = ""
+	}
 
-	/*
-				 if err := db.Table("team_compositions").
-		        Select("team_compositions.user_id, users.firstname").
-		        Joins("left join users on users.id = team_compositions.user_id").
-		        Where("team_compositions.team_id = ?", teamID).
-		        Scan(&compositions).Error; err != nil {
-		        log.Fatal("failed to query team compositions: ", err)
-		    }
-	*/
-
+	return tc, err
 }

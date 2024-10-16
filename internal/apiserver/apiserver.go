@@ -38,13 +38,7 @@ func Start(config *Config) error {
 	store := sqlstore.New(db)
 	srv := newServer(store)
 
-	// Миграции
-	db.AutoMigrate(&model.User{})
-	db.AutoMigrate(&model.Team{})
-	db.AutoMigrate(&model.TeamComposition{})
-	db.AutoMigrate(&model.Product{})
-	db.AutoMigrate(&model.Order{})
-	db.AutoMigrate(&model.OrderDetails{})
+	dbMigrate(db)
 
 	fmt.Println("Start OrdersBuid server")
 
@@ -68,4 +62,13 @@ func newDB(databaseURL string) (*gorm.DB, error) {
 	}
 
 	return db, err
+}
+
+func dbMigrate(db *gorm.DB) {
+	db.AutoMigrate(&model.User{})
+	db.AutoMigrate(&model.Team{})
+	db.AutoMigrate(&model.TeamComposition{})
+	db.AutoMigrate(&model.Product{})
+	db.AutoMigrate(&model.Order{})
+	db.AutoMigrate(&model.OrderDetails{})
 }

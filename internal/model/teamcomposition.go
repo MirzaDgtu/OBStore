@@ -6,8 +6,8 @@ import (
 
 type TeamComposition struct {
 	gorm.Model
-	TeamId int `gorm:"column:teamId" json:"team_id"`
-	UserId int `gorm:"column:userId" json:"user_id"`
+	TeamId int `gorm:"column:team_id" json:"team_id"`
+	UserId int `gorm:"column:user_id" json:"user_id"`
 }
 
 func (TeamComposition) TableName() string {

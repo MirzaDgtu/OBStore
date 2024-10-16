@@ -12,6 +12,7 @@ type User struct {
 	Pass      string `gorm:"column:pass" json:"pass" validate:"required"`
 	LoggedIn  bool   `gorm:"column:loggedin" json:"loggedin"`
 	Inn       string `gorm:"column:inn" json:"inn"`
+	Teams     []Team `gorm:"many2many:teamcompositions;" json:"teams"`
 }
 
 func (User) TableName() string {
