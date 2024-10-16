@@ -43,13 +43,13 @@ func (r *TeamRepository) TeamComposition(id uint) (tc model.Team, err error) {
 	//db.Preload("TeamCompositions").First(&team, teamID).Error; - Попробовать завтра
 
 	/*
-			 if err := db.Table("team_compositions").
-	        Select("team_compositions.user_id, users.firstname").
-	        Joins("left join users on users.id = team_compositions.user_id").
-	        Where("team_compositions.team_id = ?", teamID).
-	        Scan(&compositions).Error; err != nil {
-	        log.Fatal("failed to query team compositions: ", err)
-	    }
+				 if err := db.Table("team_compositions").
+		        Select("team_compositions.user_id, users.firstname").
+		        Joins("left join users on users.id = team_compositions.user_id").
+		        Where("team_compositions.team_id = ?", teamID).
+		        Scan(&compositions).Error; err != nil {
+		        log.Fatal("failed to query team compositions: ", err)
+		    }
 	*/
 
 }

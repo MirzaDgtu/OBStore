@@ -55,4 +55,23 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-[GIN] 2024/10/16 - 11:46:11 | 200 |        90.9µs |             ::1 | GET      "/api/v1/order/find/id"
+[GIN] 2024/10/17 - 01:23:58 | 404 |            0s |             ::1 | POST     "/api/users"
+[GIN] 2024/10/17 - 01:24:10 | 201 |     60.1433ms |             ::1 | POST     "/api/v1/users"
+[GIN] 2024/10/17 - 01:24:15 | 200 |     59.0481ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/17 - 01:24:20 | 404 |            0s |             ::1 | POST     "/user/signout"
+[GIN] 2024/10/17 - 01:24:29 | 200 |       3.746ms |             ::1 | POST     "/api/v1/user/signout"
+[GIN] 2024/10/17 - 01:24:38 | 404 |            0s |             ::1 | POST     "/user/update/pass"
+[GIN] 2024/10/17 - 01:24:47 | 200 |     87.4216ms |             ::1 | POST     "/api/v1/user/update/pass"
+[GIN] 2024/10/17 - 01:24:53 | 200 |     59.4898ms |             ::1 | POST     "/api/v1/user/update/pass"
+[GIN] 2024/10/17 - 01:24:57 | 200 |         999µs |             ::1 | GET      "/api/v1/users"
+[GIN] 2024/10/17 - 01:26:37 | 400 |            0s |             ::1 | POST     "/api/v1/teams"
+[GIN] 2024/10/17 - 01:26:43 | 201 |     20.9298ms |             ::1 | POST     "/api/v1/teams"
+[GIN] 2024/10/17 - 01:26:47 | 404 |            0s |             ::1 | GET      "/teams"
+[GIN] 2024/10/17 - 01:26:56 | 201 |      1.3162ms |             ::1 | GET      "/api/v1/teams"
+[GIN] 2024/10/17 - 01:27:00 | 404 |            0s |             ::1 | GET      "/team"
+[GIN-debug] [WARNING] Headers were already written. Wanted to override status code 500 with 200
+[GIN] 2024/10/17 - 01:27:08 | 500 |        1.05ms |             ::1 | GET      "/api/v1/team"
+[GIN] 2024/10/17 - 01:27:16 | 200 |      1.0565ms |             ::1 | GET      "/api/v1/team"
+[GIN] 2024/10/17 - 01:27:55 | 200 |         513µs |             ::1 | GET      "/api/v1/team/teamcomposition"
+[GIN] 2024/10/17 - 01:31:02 | 201 |     57.3719ms |             ::1 | POST     "/api/v1/users"
+[GIN] 2024/10/17 - 01:31:24 | 201 |      4.2842ms |             ::1 | POST     "/api/v1/teamcompositions"

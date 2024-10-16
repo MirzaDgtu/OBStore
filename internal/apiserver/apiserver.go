@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"obstore/internal/model"
 	"obstore/internal/store/sqlstore"
 	"os"
 	"time"
@@ -36,6 +37,14 @@ func Start(config *Config) error {
 
 	store := sqlstore.New(db)
 	srv := newServer(store)
+
+	// Миграции
+	db.AutoMigrate(&model.User{})
+	db.AutoMigrate(&model.Team{})
+	db.AutoMigrate(&model.TeamComposition{})
+	db.AutoMigrate(&model.Product{})
+	db.AutoMigrate(&model.Order{})
+	db.AutoMigrate(&model.OrderDetails{})
 
 	fmt.Println("Start OrdersBuid server")
 

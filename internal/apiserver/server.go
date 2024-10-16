@@ -44,7 +44,6 @@ func newServer(store store.Store) *server {
 }
 
 func (s *server) configureRouter() {
-
 	s.router.Static("/css", "./frontend/css/")
 	s.router.StaticFS("/scripts", http.Dir("./frontend/scripts"))
 	s.router.StaticFile("/favicon.png", "./fronend/warehouse.png")
