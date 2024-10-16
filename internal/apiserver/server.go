@@ -5,7 +5,9 @@ import (
 	"net/http"
 	"obstore/internal/model"
 	"obstore/internal/store"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,6 +27,17 @@ func newServer(store store.Store) *server {
 		store:  store,
 	}
 
+	s.router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
+		ExposeHeaders:    []string{"Content-Length", "application/json"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "http://localhost:8090/view"
+		},
+		MaxAge: 24 * time.Hour,
+	}))
 	s.configureRouter()
 
 	return s
@@ -496,7 +509,7 @@ func (s *server) CreateOrder(ctx *gin.Context) {
 
 func (s *server) GetOrderById(ctx *gin.Context) {
 	type request struct {
-		ID int `json:"id" validate: "required"`
+		Id int `json:"id"`
 	}
 
 	var reqs []request
@@ -508,7 +521,7 @@ func (s *server) GetOrderById(ctx *gin.Context) {
 	var orders []model.Order
 
 	for _, req := range reqs {
-		order, err := s.store.Order().GetById(req.ID)
+		order, err := s.store.Order().GetById(req.Id)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			continue
@@ -516,6 +529,8 @@ func (s *server) GetOrderById(ctx *gin.Context) {
 			orders = append(orders, order)
 		}
 	}
+
+	ctx.JSON(http.StatusOK, orders)
 }
 
 func (s *server) GetOrderByUID(ctx *gin.Context) {

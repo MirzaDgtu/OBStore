@@ -20,23 +20,15 @@ func (r *OrderRepository) Update(u model.Order) (order model.Order, err error) {
 
 func (r *OrderRepository) GetAll() (orders []model.Order, err error) {
 
-	return orders, r.store.db.Table("orders").Select("*").
-		Joins("LEFT JOIN orderdetails on orderdetails.orderid = orders.id").
-		Scan(&orders).Error
+	return orders, r.store.db.Preload("OrderDetails").Find(&orders).Error
 }
 
 func (r *OrderRepository) GetById(id int) (order model.Order, err error) {
-	return order, r.store.db.Table("orders").Select("*").
-		Joins("LEFT JOIN orderdetails on orderdetails.orderid = orders.id").
-		Where("orders.id = ?", id).
-		Scan(&order).Error
+	return order, r.store.db.Where("orders.id=?", id).Preload("OrderDetails").First(&order).Error
 }
 
 func (r *OrderRepository) GetByOrderUID(uid int) (order model.Order, err error) {
-	return order, r.store.db.Table("orders").Select("*").
-		Joins("LEFT JOIN orderdetails on orderdetails.orderid = orders.id").
-		Where("orderuid = ?", uid).
-		Scan(&order).Error
+	return order, r.store.db.Where("orderuid=?", uid).Preload("OrderDetails").Find(&order).Error
 }
 
 func (r *OrderRepository) GetByFolioNum(folioNum int) (order model.Order, err error) {

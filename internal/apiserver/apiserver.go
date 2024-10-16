@@ -16,7 +16,7 @@ import (
 
 func Start(config *Config) error {
 	gin.DisableConsoleColor()
-	f, _ := os.Create("log\\gin" + (time.Time.Format(time.Now(), "2006-01-01 00:00:00")) + ".log")
+	f, _ := os.Create("log\\gin.log")
 	gin.DefaultWriter = io.MultiWriter(f)
 
 	db, err := newDB(config.DatabaseURL)
@@ -36,6 +36,7 @@ func Start(config *Config) error {
 
 	store := sqlstore.New(db)
 	srv := newServer(store)
+
 	fmt.Println("Start OrdersBuid server")
 
 	return srv.router.Run(config.BindAddr)
