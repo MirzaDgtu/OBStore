@@ -30,11 +30,11 @@ func (r *TeamCompositionRepository) GetAll() (tcs []model.TeamComposition, err e
 }
 
 func (r *TeamCompositionRepository) GetByUserId(userId int) (tcs []model.TeamComposition, err error) {
-	return tcs, r.store.db.Where(&model.TeamComposition{UserId: userId}).Find(&tcs).Error
+	return tcs, r.store.db.Where("user_id", userId).Find(&tcs).Error
 }
 
 func (r *TeamCompositionRepository) GetByTeamId(idTeam int) (tcs []model.TeamComposition, err error) {
-	return tcs, r.store.db.Where(&model.TeamComposition{TeamId: idTeam}).Find(&tcs).Error
+	return tcs, r.store.db.Where("team_id", idTeam).Find(&tcs).Error
 }
 
 func (r *TeamCompositionRepository) GetByID(id uint) (ts model.TeamComposition, err error) {

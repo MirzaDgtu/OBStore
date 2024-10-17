@@ -35,13 +35,13 @@ func (r *TeamRepository) GetAll() (teams []model.Team, err error) {
 }
 
 func (r *TeamRepository) TeamComposition(id uint) (tc model.Team, err error) {
-	err = r.store.db.Where("id=?", id).Preload("Users").Find(&tc).Error
+	err = r.store.db.Where("id=?", id).Preload("Users").First(&tc).Error
 	if err != nil {
 		return tc, err
 	}
 
-	for _, element := range tc.Users {
-		element.Pass = ""
+	for i, _ := range tc.Users {
+		tc.Users[i].Pass = ""
 	}
 
 	return tc, err

@@ -28,15 +28,15 @@ func (r *OrderRepository) GetById(id int) (order model.Order, err error) {
 }
 
 func (r *OrderRepository) GetByOrderUID(uid int) (order model.Order, err error) {
-	return order, r.store.db.Where("orderuid=?", uid).Preload("OrderDetails").Find(&order).Error
+	return order, r.store.db.Where("orders.orderuid=?", uid).Preload("OrderDetails").Find(&order).Error
 }
 
 func (r *OrderRepository) GetByFolioNum(folioNum int) (order model.Order, err error) {
-	return order, r.store.db.Where("foliouid = ?", folioNum).Preload("OrderDetails").First(&order).Error
+	return order, r.store.db.Where("orders.folionum = ?", folioNum).Preload("OrderDetails").First(&order).Error
 }
 
 func (r *OrderRepository) GetByDateRange(dtStart, dtFinish string) (orders []model.Order, err error) {
-	return orders, r.store.db.Where("foliodate BETWEEN ? AND ?", dtStart, dtFinish).
+	return orders, r.store.db.Where("orders.foliodate BETWEEN ? AND ?", dtStart, dtFinish).
 		Preload("OrderDetails").Find(&orders).Error
 }
 

@@ -18,7 +18,7 @@ type OrderDetails struct {
 	Discount    float64    `gorm:"column:discount" json:"discount"`
 	SumArtucul  float64    `gorm:"column:sumartucul" json:"sum_artucul"`
 	FinishAt    *time.Time `gorm:"column:finishat" json:"finish_at"`
-	Srok        *time.Time `gorm:"column:srok" json:"Srok"`
+	Srok        string     `gorm:"column:srok" json:"Srok"`
 	Partia      string     `gorm:"column:partia" json:"Partia"`
 	Done        bool       `gorm:"column:done" json:"done"`
 }

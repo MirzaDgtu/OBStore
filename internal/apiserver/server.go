@@ -512,11 +512,12 @@ func (s *server) GetOrderById(ctx *gin.Context) {
 	}
 
 	var reqs []request
-	err := ctx.ShouldBind(&reqs)
+	err := ctx.ShouldBindJSON(&reqs)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
 	var orders []model.Order
 
 	for _, req := range reqs {
@@ -538,7 +539,7 @@ func (s *server) GetOrderByUID(ctx *gin.Context) {
 	}
 
 	var reqs []request
-	err := ctx.ShouldBind(&reqs)
+	err := ctx.ShouldBindJSON(&reqs)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -554,6 +555,8 @@ func (s *server) GetOrderByUID(ctx *gin.Context) {
 			orders = append(orders, order)
 		}
 	}
+
+	ctx.JSON(http.StatusOK, orders)
 }
 
 func (s *server) GetOrderByFolioNum(ctx *gin.Context) {
@@ -562,7 +565,7 @@ func (s *server) GetOrderByFolioNum(ctx *gin.Context) {
 	}
 
 	var reqs []request
-	err := ctx.ShouldBind(&reqs)
+	err := ctx.ShouldBindJSON(&reqs)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -578,6 +581,8 @@ func (s *server) GetOrderByFolioNum(ctx *gin.Context) {
 			orders = append(orders, order)
 		}
 	}
+
+	ctx.JSON(http.StatusOK, orders)
 }
 
 func (s *server) GetOrdersAll(ctx *gin.Context) {
@@ -723,7 +728,7 @@ func (s *server) GetTeamCompositionByTeamId(ctx *gin.Context) {
 	}
 
 	var req request
-	err := ctx.ShouldBindQuery(&req)
+	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

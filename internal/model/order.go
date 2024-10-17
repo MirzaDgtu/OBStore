@@ -10,7 +10,7 @@ type Order struct {
 	gorm.Model
 	OrderUid      int            `gorm:"column:orderuid" json:"order_uid"`
 	UnicumNum     int            `gorm:"column:unicumnum" json:"unicum_num"`
-	FolioNum      int            `gorm:"column:foliosum" json:"folio_num"`
+	FolioNum      int            `gorm:"column:folionum" json:"folio_num"`
 	OrderDate     string         `gorm:"column:orderdate" json:"order_date"`
 	FolioDate     string         `gorm:"column:foliodate" json:"folio_date"`
 	OrderSum      float64        `gorm:"column:ordersum" json:"order_sum"`
