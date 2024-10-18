@@ -1,15 +1,13 @@
-version: '4.34.2'
+version: '3.8'
 
 services:
-  OBStore: 
+  obstore_api: 
     build: ./
-    command: ./OBStore
+    command: /app/obstore_api
     ports:      
       - 8090:8090
     depends_on:
       - db
-    environment:
-      - name=value
 
   db: 
     restart: always
@@ -23,4 +21,4 @@ services:
       - MYSQL_DATABASE=orderbuilds
 
     ports:
-            - 3306:3306  
+            - 3307:3306  

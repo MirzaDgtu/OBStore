@@ -1,20 +1,32 @@
-FROM golang:1.23.1
+# Используем официальный образ Go для сборки
+FROM golang:1.23.2-alpine AS builder
 
-# Set destination for COPY
-WORKDIR D:\Projects\Go\OBStore
+# Устанавливаем рабочую директорию
+WORKDIR /build
 
-# Download Go modules
+# Копируем go.mod и go.sum для загрузки зависимостей
 COPY go.mod go.sum ./
+
+# Загружаем зависимости
 RUN go mod download
 
-# Copy the source code. Note the slash at the end, as explained in
-# https://docs.docker.com/reference/dockerfile/#copy
-COPY *.go ./
+# Копируем все файлы проекта в контейнер
+COPY . .
 
-# Build
-RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-gs-ping
+# Собираем приложение
+RUN go build -o obstore_api ./cmd/apiserver
 
+# Используем минимальный образ для запуска
+FROM gcr.io/distroless/base-debian12
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем собранный бинарник из предыдущего этапа
+COPY --from=builder /build/obstore_api .
+
+# Открываем порт
 EXPOSE 8090
 
-# Run
-CMD ["/OBStore"]
+# Запускаем приложение
+CMD ["/app/obstore_api"]

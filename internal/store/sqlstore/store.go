@@ -13,6 +13,7 @@ type Store struct {
 	orderRepository           *OrderRepository
 	productRepository         *ProductRepository
 	teamCompositionRepository *TeamCompositionRepository
+	assemblyOrderRepository   *AssemblyOrderRepository
 }
 
 func New(db *gorm.DB) *Store {
@@ -79,4 +80,16 @@ func (s *Store) TeamComposition() store.TeamCompositionRepository {
 	}
 
 	return s.teamCompositionRepository
+}
+
+func (s *Store) AssemblyOrderRepository() store.AsemblyOrderRepository {
+	if s.assemblyOrderRepository != nil {
+		return s.assemblyOrderRepository
+	}
+
+	s.assemblyOrderRepository = &AssemblyOrderRepository{
+		store: s,
+	}
+
+	return s.assemblyOrderRepository
 }
