@@ -82,7 +82,7 @@ func (s *Store) TeamComposition() store.TeamCompositionRepository {
 	return s.teamCompositionRepository
 }
 
-func (s *Store) AssemblyOrderRepository() store.AsemblyOrderRepository {
+func (s *Store) AssemblyOrder() store.AssemblyOrderRepository {
 	if s.assemblyOrderRepository != nil {
 		return s.assemblyOrderRepository
 	}

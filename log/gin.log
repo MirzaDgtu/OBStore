@@ -23,7 +23,7 @@
 [GIN-debug] GET    /api/v1/team              --> obstore/internal/apiserver.(*server).GetTeamById-fm (4 handlers)
 [GIN-debug] POST   /api/v1/team/delete       --> obstore/internal/apiserver.(*server).DeteleTeamById-fm (4 handlers)
 [GIN-debug] POST   /api/v1/team/update       --> obstore/internal/apiserver.(*server).UpdateTeam-fm (4 handlers)
-[GIN-debug] GET    /api/v1/team/teamcomposition --> obstore/internal/apiserver.(*server).GetTeamComposition-fm (4 handlers)
+[GIN-debug] POST   /api/v1/team/teamcomposition --> obstore/internal/apiserver.(*server).GetTeamComposition-fm (4 handlers)
 [GIN-debug] POST   /api/v1/teams             --> obstore/internal/apiserver.(*server).CreateTeam-fm (4 handlers)
 [GIN-debug] GET    /api/v1/teams             --> obstore/internal/apiserver.(*server).GetTeamAll-fm (4 handlers)
 [GIN-debug] GET    /api/v1/product/find/article --> obstore/internal/apiserver.(*server).GetProductByArticle-fm (4 handlers)
@@ -46,6 +46,7 @@
 [GIN-debug] GET    /api/v1/teamcomposition/user --> obstore/internal/apiserver.(*server).GetTeamCompositionByUserId-fm (4 handlers)
 [GIN-debug] POST   /api/v1/teamcompositions  --> obstore/internal/apiserver.(*server).CreateTeamComposition-fm (4 handlers)
 [GIN-debug] GET    /api/v1/teamcompositions  --> obstore/internal/apiserver.(*server).GetTeamCompositionAll-fm (4 handlers)
+[GIN-debug] GET    /api/v1/assemblyorder/find/id --> obstore/internal/apiserver.(*server).GetAssemblyOrderByID-fm (4 handlers)
 [GIN-debug] GET    /view/login               --> obstore/internal/apiserver.(*server).LoginHTML-fm (4 handlers)
 [GIN-debug] POST   /view/user/signout        --> obstore/internal/apiserver.(*server).SignOutUserById-fm (4 handlers)
 [GIN-debug] POST   /view/user/update         --> obstore/internal/apiserver.(*server).UpdateUser-fm (4 handlers)
@@ -55,18 +56,11 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-<<<<<<< HEAD
-[GIN] 2024/10/17 - 14:25:22 | 400 |       726.9µs |   172.16.55.175 | GET      "/api/v1/team/teamcomposition"
-[GIN] 2024/10/17 - 14:25:44 | 400 |            0s |   172.16.55.175 | GET      "/api/v1/team/teamcomposition"
-[GIN] 2024/10/17 - 14:25:59 | 200 |     27.6085ms |   172.16.55.175 | GET      "/api/v1/team/teamcomposition"
-[GIN] 2024/10/17 - 14:27:06 | 500 |      9.7223ms |     172.16.4.23 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/17 - 14:27:08 | 500 |      9.4628ms |     172.16.4.23 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/17 - 14:27:28 | 201 |     81.6237ms |     172.16.4.23 | POST     "/api/v1/users"
-[GIN] 2024/10/17 - 14:27:32 | 200 |    102.7205ms |     172.16.4.23 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/17 - 14:27:32 | 200 |     14.6042ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/17 - 14:28:28 | 201 |       6.867ms |     172.16.4.23 | GET      "/api/v1/teams"
-[GIN] 2024/10/17 - 14:28:30 | 201 |      5.4942ms |     172.16.4.23 | GET      "/api/v1/teams"
-[GIN] 2024/10/17 - 14:28:49 | 200 |     38.1432ms |   172.16.55.175 | GET      "/api/v1/team/teamcomposition"
-=======
-[GIN] 2024/10/17 - 21:59:33 | 500 |     55.0016ms |             ::1 | POST     "/api/v1/users/signin"
->>>>>>> 4ad93f48032431160336d8fc0833eea1199124ab
+[GIN] 2024/10/18 - 14:13:46 | 500 |     10.3475ms |             ::1 | GET      "/api/v1/assemblyorder/find/id"
+[GIN] 2024/10/18 - 14:14:52 | 200 |    117.5565ms |     172.16.4.23 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/18 - 14:14:53 | 200 |     14.4342ms |     172.16.4.23 | GET      "/api/v1/orders"
+[GIN] 2024/10/18 - 14:15:00 | 200 |     21.1789ms |     172.16.4.23 | GET      "/api/v1/orders"
+[GIN] 2024/10/18 - 14:16:44 | 200 |     26.5882ms |     172.16.4.23 | GET      "/api/v1/orders"
+[GIN] 2024/10/18 - 14:16:45 | 200 |       7.262ms |     172.16.4.23 | GET      "/api/v1/products"
+[GIN] 2024/10/18 - 14:18:40 | 200 |     34.0432ms |     172.16.4.23 | GET      "/api/v1/orders"
+[GIN] 2024/10/18 - 14:19:44 | 200 |     16.2039ms |     172.16.4.23 | GET      "/api/v1/orders"

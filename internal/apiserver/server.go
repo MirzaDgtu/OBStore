@@ -71,7 +71,7 @@ func (s *server) configureRouter() {
 			teamGroup.GET("", s.GetTeamById)
 			teamGroup.POST("/delete", s.DeteleTeamById)
 			teamGroup.POST("/update", s.UpdateTeam)
-			teamGroup.GET("/teamcomposition", s.GetTeamComposition)
+			teamGroup.POST("/teamcomposition", s.GetTeamComposition)
 
 		}
 
@@ -126,6 +126,19 @@ func (s *server) configureRouter() {
 			teamCompositionsGroup.GET("", s.GetTeamCompositionAll)
 
 		}
+
+		assemblyOrderGroup := apiGroup.Group("/assemblyorder")
+		{
+			assemblyOrderGroup.GET("/find/id", s.GetAssemblyOrderByID)
+		}
+
+		/*
+			assemblyOrdersGroup := apiGroup.Group("/assemblyorders")
+			{
+
+			}
+		*/
+
 	}
 
 	// Маршруты для сайта
@@ -805,4 +818,26 @@ func (s *server) GetTeamComposition(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, findedTC)
+}
+
+// AssemblyOrder ...
+func (s *server) GetAssemblyOrderByID(ctx *gin.Context) {
+	type request struct {
+		ID uint `json:"id"`
+	}
+
+	var req request
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+
+	ao, err := s.store.AssemblyOrder().GetByID(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, ao)
 }
