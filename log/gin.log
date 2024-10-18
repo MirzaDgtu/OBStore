@@ -55,3 +55,14 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
+[GIN] 2024/10/17 - 14:25:22 | 400 |       726.9µs |   172.16.55.175 | GET      "/api/v1/team/teamcomposition"
+[GIN] 2024/10/17 - 14:25:44 | 400 |            0s |   172.16.55.175 | GET      "/api/v1/team/teamcomposition"
+[GIN] 2024/10/17 - 14:25:59 | 200 |     27.6085ms |   172.16.55.175 | GET      "/api/v1/team/teamcomposition"
+[GIN] 2024/10/17 - 14:27:06 | 500 |      9.7223ms |     172.16.4.23 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/17 - 14:27:08 | 500 |      9.4628ms |     172.16.4.23 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/17 - 14:27:28 | 201 |     81.6237ms |     172.16.4.23 | POST     "/api/v1/users"
+[GIN] 2024/10/17 - 14:27:32 | 200 |    102.7205ms |     172.16.4.23 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/17 - 14:27:32 | 200 |     14.6042ms |     172.16.4.23 | GET      "/api/v1/orders"
+[GIN] 2024/10/17 - 14:28:28 | 201 |       6.867ms |     172.16.4.23 | GET      "/api/v1/teams"
+[GIN] 2024/10/17 - 14:28:30 | 201 |      5.4942ms |     172.16.4.23 | GET      "/api/v1/teams"
+[GIN] 2024/10/17 - 14:28:49 | 200 |     38.1432ms |   172.16.55.175 | GET      "/api/v1/team/teamcomposition"
