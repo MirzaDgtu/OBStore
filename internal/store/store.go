@@ -6,4 +6,5 @@ type Store interface {
 	Order() OrderRepository
 	Product() ProductRepository
 	TeamComposition() TeamCompositionRepository
+	AssemblyOrder() AssemblyOrderRepository
 }
