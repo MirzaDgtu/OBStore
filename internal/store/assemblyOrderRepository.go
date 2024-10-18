@@ -5,5 +5,8 @@ import "obstore/internal/model"
 type AssemblyOrderRepository interface {
 	Create(model.AssemblyOrder) (model.AssemblyOrder, error)
 	Update(model.AssemblyOrder) (model.AssemblyOrder, error)
-	DeleteByID(id uint)
+	Delete(uint) error
+	GetByID(uint) (model.AssemblyOrder, error)
+	GetByOrderID(uint) (model.AssemblyOrder, error)
+	GetByUserID(uint) ([]model.AssemblyOrder, error)
 }
