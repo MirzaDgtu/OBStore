@@ -4,63 +4,57 @@
  - using env:	export GIN_MODE=release
  - using code:	gin.SetMode(gin.ReleaseMode)
 
-[GIN-debug] GET    /css/*filepath            --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (4 handlers)
-[GIN-debug] HEAD   /css/*filepath            --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (4 handlers)
-[GIN-debug] GET    /scripts/*filepath        --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (4 handlers)
-[GIN-debug] HEAD   /scripts/*filepath        --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (4 handlers)
-[GIN-debug] GET    /favicon.png              --> obstore/internal/apiserver.(*server).configureRouter.(*RouterGroup).StaticFile.func1 (4 handlers)
-[GIN-debug] HEAD   /favicon.png              --> obstore/internal/apiserver.(*server).configureRouter.(*RouterGroup).StaticFile.func1 (4 handlers)
+[GIN-debug] GET    /css/*filepath            --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+[GIN-debug] HEAD   /css/*filepath            --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+[GIN-debug] GET    /scripts/*filepath        --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+[GIN-debug] HEAD   /scripts/*filepath        --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (5 handlers)
+[GIN-debug] GET    /favicon.png              --> obstore/internal/apiserver.(*server).configureRouter.(*RouterGroup).StaticFile.func1 (5 handlers)
+[GIN-debug] HEAD   /favicon.png              --> obstore/internal/apiserver.(*server).configureRouter.(*RouterGroup).StaticFile.func1 (5 handlers)
 [GIN-debug] Loaded HTML Templates (2): 
 	- 
 	- login.html
 
-[GIN-debug] POST   /api/v1/user/signout      --> obstore/internal/apiserver.(*server).SignOutUserById-fm (4 handlers)
-[GIN-debug] POST   /api/v1/user/update       --> obstore/internal/apiserver.(*server).UpdateUser-fm (4 handlers)
-[GIN-debug] POST   /api/v1/user/update/pass  --> obstore/internal/apiserver.(*server).UpdatePassword-fm (4 handlers)
-[GIN-debug] POST   /api/v1/users             --> obstore/internal/apiserver.(*server).CreateUser-fm (4 handlers)
-[GIN-debug] POST   /api/v1/users/signin      --> obstore/internal/apiserver.(*server).SignIn-fm (4 handlers)
-[GIN-debug] GET    /api/v1/users             --> obstore/internal/apiserver.(*server).GetUserAll-fm (4 handlers)
-[GIN-debug] GET    /api/v1/team              --> obstore/internal/apiserver.(*server).GetTeamById-fm (4 handlers)
-[GIN-debug] POST   /api/v1/team/delete       --> obstore/internal/apiserver.(*server).DeteleTeamById-fm (4 handlers)
-[GIN-debug] POST   /api/v1/team/update       --> obstore/internal/apiserver.(*server).UpdateTeam-fm (4 handlers)
-[GIN-debug] POST   /api/v1/team/teamcomposition --> obstore/internal/apiserver.(*server).GetTeamComposition-fm (4 handlers)
-[GIN-debug] POST   /api/v1/teams             --> obstore/internal/apiserver.(*server).CreateTeam-fm (4 handlers)
-[GIN-debug] GET    /api/v1/teams             --> obstore/internal/apiserver.(*server).GetTeamAll-fm (4 handlers)
-[GIN-debug] GET    /api/v1/product/find/article --> obstore/internal/apiserver.(*server).GetProductByArticle-fm (4 handlers)
-[GIN-debug] GET    /api/v1/product/find/strikecode --> obstore/internal/apiserver.(*server).GetProductByStrikeCode-fm (4 handlers)
-[GIN-debug] GET    /api/v1/product/find/name --> obstore/internal/apiserver.(*server).GetProductByName-fm (4 handlers)
-[GIN-debug] POST   /api/v1/product/update/strikecode --> obstore/internal/apiserver.(*server).UpdateProductStrikeCodeById-fm (4 handlers)
-[GIN-debug] POST   /api/v1/products          --> obstore/internal/apiserver.(*server).CreateProduct-fm (4 handlers)
-[GIN-debug] GET    /api/v1/products          --> obstore/internal/apiserver.(*server).GetProductsAll-fm (4 handlers)
-[GIN-debug] GET    /api/v1/order/find/id     --> obstore/internal/apiserver.(*server).GetOrderById-fm (4 handlers)
-[GIN-debug] GET    /api/v1/order/find/uid    --> obstore/internal/apiserver.(*server).GetOrderByUID-fm (4 handlers)
-[GIN-debug] GET    /api/v1/order/find/num    --> obstore/internal/apiserver.(*server).GetOrderByFolioNum-fm (4 handlers)
-[GIN-debug] POST   /api/v1/orders            --> obstore/internal/apiserver.(*server).CreateOrder-fm (4 handlers)
-[GIN-debug] GET    /api/v1/orders            --> obstore/internal/apiserver.(*server).GetOrdersAll-fm (4 handlers)
-[GIN-debug] GET    /api/v1/orders/range      --> obstore/internal/apiserver.(*server).GetOrdersByDateRange-fm (4 handlers)
-[GIN-debug] GET    /api/v1/orders/driver     --> obstore/internal/apiserver.(*server).GetOrdersByDriver-fm (4 handlers)
-[GIN-debug] GET    /api/v1/orders/agent      --> obstore/internal/apiserver.(*server).GetOrdersByAgent-fm (4 handlers)
-[GIN-debug] GET    /api/v1/teamcomposition/  --> obstore/internal/apiserver.(*server).GetTeamCompositionById-fm (4 handlers)
-[GIN-debug] POST   /api/v1/teamcomposition/update --> obstore/internal/apiserver.(*server).UpdateTeamComposition-fm (4 handlers)
-[GIN-debug] GET    /api/v1/teamcomposition/team --> obstore/internal/apiserver.(*server).GetTeamCompositionByTeamId-fm (4 handlers)
-[GIN-debug] GET    /api/v1/teamcomposition/user --> obstore/internal/apiserver.(*server).GetTeamCompositionByUserId-fm (4 handlers)
-[GIN-debug] POST   /api/v1/teamcompositions  --> obstore/internal/apiserver.(*server).CreateTeamComposition-fm (4 handlers)
-[GIN-debug] GET    /api/v1/teamcompositions  --> obstore/internal/apiserver.(*server).GetTeamCompositionAll-fm (4 handlers)
-[GIN-debug] GET    /api/v1/assemblyorder/find/id --> obstore/internal/apiserver.(*server).GetAssemblyOrderByID-fm (4 handlers)
-[GIN-debug] GET    /view/login               --> obstore/internal/apiserver.(*server).LoginHTML-fm (4 handlers)
-[GIN-debug] POST   /view/user/signout        --> obstore/internal/apiserver.(*server).SignOutUserById-fm (4 handlers)
-[GIN-debug] POST   /view/user/update         --> obstore/internal/apiserver.(*server).UpdateUser-fm (4 handlers)
-[GIN-debug] POST   /view/user/update/pass    --> obstore/internal/apiserver.(*server).UpdatePassword-fm (4 handlers)
-[GIN-debug] POST   /view/user/users          --> obstore/internal/apiserver.(*server).CreateUser-fm (4 handlers)
-[GIN-debug] POST   /view/user/users/signin   --> obstore/internal/apiserver.(*server).SignIn-fm (4 handlers)
+[GIN-debug] POST   /api/v1/user/signout      --> obstore/internal/apiserver.(*server).SignOutUserById-fm (5 handlers)
+[GIN-debug] POST   /api/v1/user/update       --> obstore/internal/apiserver.(*server).UpdateUser-fm (5 handlers)
+[GIN-debug] POST   /api/v1/user/update/pass  --> obstore/internal/apiserver.(*server).UpdatePassword-fm (5 handlers)
+[GIN-debug] POST   /api/v1/users             --> obstore/internal/apiserver.(*server).CreateUser-fm (5 handlers)
+[GIN-debug] POST   /api/v1/users/signin      --> obstore/internal/apiserver.(*server).SignIn-fm (5 handlers)
+[GIN-debug] GET    /api/v1/users             --> obstore/internal/apiserver.(*server).GetUserAll-fm (5 handlers)
+[GIN-debug] GET    /api/v1/team              --> obstore/internal/apiserver.(*server).GetTeamById-fm (5 handlers)
+[GIN-debug] POST   /api/v1/team/delete       --> obstore/internal/apiserver.(*server).DeteleTeamById-fm (5 handlers)
+[GIN-debug] POST   /api/v1/team/update       --> obstore/internal/apiserver.(*server).UpdateTeam-fm (5 handlers)
+[GIN-debug] POST   /api/v1/team/teamcomposition --> obstore/internal/apiserver.(*server).GetTeamComposition-fm (5 handlers)
+[GIN-debug] POST   /api/v1/teams             --> obstore/internal/apiserver.(*server).CreateTeam-fm (5 handlers)
+[GIN-debug] GET    /api/v1/teams             --> obstore/internal/apiserver.(*server).GetTeamAll-fm (5 handlers)
+[GIN-debug] GET    /api/v1/product/find/article --> obstore/internal/apiserver.(*server).GetProductByArticle-fm (5 handlers)
+[GIN-debug] GET    /api/v1/product/find/strikecode --> obstore/internal/apiserver.(*server).GetProductByStrikeCode-fm (5 handlers)
+[GIN-debug] GET    /api/v1/product/find/name --> obstore/internal/apiserver.(*server).GetProductByName-fm (5 handlers)
+[GIN-debug] POST   /api/v1/product/update/strikecode --> obstore/internal/apiserver.(*server).UpdateProductStrikeCodeById-fm (5 handlers)
+[GIN-debug] POST   /api/v1/products          --> obstore/internal/apiserver.(*server).CreateProduct-fm (5 handlers)
+[GIN-debug] GET    /api/v1/products          --> obstore/internal/apiserver.(*server).GetProductsAll-fm (5 handlers)
+[GIN-debug] GET    /api/v1/order/find/id     --> obstore/internal/apiserver.(*server).GetOrderById-fm (5 handlers)
+[GIN-debug] GET    /api/v1/order/find/uid    --> obstore/internal/apiserver.(*server).GetOrderByUID-fm (5 handlers)
+[GIN-debug] GET    /api/v1/order/find/num    --> obstore/internal/apiserver.(*server).GetOrderByFolioNum-fm (5 handlers)
+[GIN-debug] POST   /api/v1/orders            --> obstore/internal/apiserver.(*server).CreateOrder-fm (5 handlers)
+[GIN-debug] GET    /api/v1/orders            --> obstore/internal/apiserver.(*server).GetOrdersAll-fm (5 handlers)
+[GIN-debug] GET    /api/v1/orders/range      --> obstore/internal/apiserver.(*server).GetOrdersByDateRange-fm (5 handlers)
+[GIN-debug] GET    /api/v1/orders/driver     --> obstore/internal/apiserver.(*server).GetOrdersByDriver-fm (5 handlers)
+[GIN-debug] GET    /api/v1/orders/agent      --> obstore/internal/apiserver.(*server).GetOrdersByAgent-fm (5 handlers)
+[GIN-debug] GET    /api/v1/teamcomposition/  --> obstore/internal/apiserver.(*server).GetTeamCompositionById-fm (5 handlers)
+[GIN-debug] POST   /api/v1/teamcomposition/update --> obstore/internal/apiserver.(*server).UpdateTeamComposition-fm (5 handlers)
+[GIN-debug] GET    /api/v1/teamcomposition/team --> obstore/internal/apiserver.(*server).GetTeamCompositionByTeamId-fm (5 handlers)
+[GIN-debug] GET    /api/v1/teamcomposition/user --> obstore/internal/apiserver.(*server).GetTeamCompositionByUserId-fm (5 handlers)
+[GIN-debug] POST   /api/v1/teamcompositions  --> obstore/internal/apiserver.(*server).CreateTeamComposition-fm (5 handlers)
+[GIN-debug] GET    /api/v1/teamcompositions  --> obstore/internal/apiserver.(*server).GetTeamCompositionAll-fm (5 handlers)
+[GIN-debug] GET    /api/v1/assemblyorder/find/id --> obstore/internal/apiserver.(*server).GetAssemblyOrderByID-fm (5 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-[GIN] 2024/10/18 - 14:13:46 | 500 |     10.3475ms |             ::1 | GET      "/api/v1/assemblyorder/find/id"
-[GIN] 2024/10/18 - 14:14:52 | 200 |    117.5565ms |     172.16.4.23 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/18 - 14:14:53 | 200 |     14.4342ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/18 - 14:15:00 | 200 |     21.1789ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/18 - 14:16:44 | 200 |     26.5882ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/18 - 14:16:45 | 200 |       7.262ms |     172.16.4.23 | GET      "/api/v1/products"
-[GIN] 2024/10/18 - 14:18:40 | 200 |     34.0432ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/18 - 14:19:44 | 200 |     16.2039ms |     172.16.4.23 | GET      "/api/v1/orders"
+[GIN] 2024/10/20 - 01:25:14 | 500 |     55.4729ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/20 - 01:25:14 | 500 |     55.4729ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/20 - 01:26:54 | 500 |      1.0544ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/20 - 01:26:54 | 500 |      1.0544ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/20 - 01:26:59 | 200 |     56.8998ms |             ::1 | POST     "/api/v1/user/update/pass"
+[GIN] 2024/10/20 - 01:26:59 | 200 |     56.8998ms |             ::1 | POST     "/api/v1/user/update/pass"
+[GIN] 2024/10/20 - 01:27:02 | 200 |     57.8011ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/20 - 01:27:02 | 200 |     57.8011ms |             ::1 | POST     "/api/v1/users/signin"

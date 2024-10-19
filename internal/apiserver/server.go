@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 var (
@@ -27,6 +28,7 @@ func newServer(store store.Store) *server {
 		store:  store,
 	}
 
+	s.router.Use(gin.Logger())
 	s.router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST"},
@@ -141,24 +143,27 @@ func (s *server) configureRouter() {
 
 	}
 
-	// Маршруты для сайта
-	viewGroup := s.router.Group("/view")
-	{
-		viewGroup.GET("/login", s.LoginHTML)
-
-		userGroup := viewGroup.Group("/user")
+	/*
+		// Маршруты для сайта
+		viewGroup := s.router.Group("/view")
 		{
-			userGroup.POST("/signout", s.SignOutUserById)
-			userGroup.POST("/update", s.UpdateUser)
-			userGroup.POST("/update/pass", s.UpdatePassword)
+			viewGroup.GET("/login", s.LoginHTML)
+
+			userGroup := viewGroup.Group("/user")
+			{
+				userGroup.POST("/signout", s.SignOutUserById)
+				userGroup.POST("/update", s.UpdateUser)
+				userGroup.POST("/update/pass", s.UpdatePassword)
+			}
+
+			usersGroup := userGroup.Group("/users")
+			{
+				usersGroup.POST("", s.CreateUser)
+				usersGroup.POST("/signin", s.SignIn)
+			}
 		}
 
-		usersGroup := userGroup.Group("/users")
-		{
-			usersGroup.POST("", s.CreateUser)
-			usersGroup.POST("/signin", s.SignIn)
-		}
-	}
+	*/
 }
 
 // User..
@@ -193,6 +198,13 @@ func (s *server) SignIn(ctx *gin.Context) {
 		return
 	}
 
+	tokenString, err := createAndSignJWT(&user)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "JWT creation failed"})
+		return
+	}
+
+	setCookie(ctx, tokenString)
 	ctx.JSON(http.StatusOK, user)
 }
 
@@ -840,4 +852,22 @@ func (s *server) GetAssemblyOrderByID(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, ao)
+}
+
+func createAndSignJWT(user *model.User) (string, error) {
+	// Create a new token object, specifying signing method and the claims
+	// you would like it to contain.
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"userID": user.ID,
+		"ttl":    time.Now().Add(time.Hour * 24 * 100).Unix(),
+	})
+
+	hmacSampleSecret := "8a046a6b436496d9c7af3e196a73ee9948677eb30b251706667ad59d6261bd78d2f6f501a6dea0118cfb3b0dcd62d6c9eb88142e2c24c2c686133a935cd65651"
+	// Sign and get the complete encoded token as a string using the secret
+	return token.SignedString([]byte(hmacSampleSecret))
+}
+
+func setCookie(ctx *gin.Context, token string) {
+	ctx.SetSameSite(http.SameSiteLaxMode)
+	ctx.SetCookie("Auth", token, 3600*24*100, "", "", false, true)
 }

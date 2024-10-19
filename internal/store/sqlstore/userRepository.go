@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"errors"
+	"fmt"
 	"obstore/internal/model"
 
 	"golang.org/x/crypto/bcrypt"
@@ -69,23 +70,34 @@ func (r *UserRepository) SignOutUserById(id int) error {
 }
 
 func (r *UserRepository) ChangePassword(id int, pass string) error {
+	/*
+		var user model.User
+		result := r.store.db.Table("users").Where("id = ?", id)
+		err := result.First(&user).Error
+		if err != nil {
+			return err
+		}
+
+		err = hashPassword(&pass)
+		if err != nil {
+			return err
+		}
+
+		err = result.Update("pass", pass).Error
+		if err != nil {
+			return err
+		}*/
+
+	fmt.Println(pass)
+	err := hashPassword(&pass)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(pass)
+
 	var user model.User
-	result := r.store.db.Table("users").Where("id = ?", id)
-	err := result.First(&user).Error
-	if err != nil {
-		return err
-	}
-
-	err = hashPassword(&pass)
-	if err != nil {
-		return err
-	}
-
-	err = result.Update("pass", pass).Error
-	if err != nil {
-		return err
-	}
-	return nil
+	return r.store.db.Model(&user).Where("id=?", id).Update("pass", pass).Error
 }
 
 func hashPassword(s *string) error {
