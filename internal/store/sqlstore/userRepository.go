@@ -70,23 +70,6 @@ func (r *UserRepository) SignOutUserById(id int) error {
 }
 
 func (r *UserRepository) ChangePassword(id int, pass string) error {
-	/*
-		var user model.User
-		result := r.store.db.Table("users").Where("id = ?", id)
-		err := result.First(&user).Error
-		if err != nil {
-			return err
-		}
-
-		err = hashPassword(&pass)
-		if err != nil {
-			return err
-		}
-
-		err = result.Update("pass", pass).Error
-		if err != nil {
-			return err
-		}*/
 
 	fmt.Println(pass)
 	err := hashPassword(&pass)
@@ -98,6 +81,14 @@ func (r *UserRepository) ChangePassword(id int, pass string) error {
 
 	var user model.User
 	return r.store.db.Model(&user).Where("id=?", id).Update("pass", pass).Error
+}
+
+func (r *UserRepository) GetAll() (users []model.User, err error) {
+	return users, r.store.db.Select("id, firstname, lastname, email, inn").Find(&users).Error
+}
+
+func (r *UserRepository) UpdateToken(id uint, token string) error {
+	return r.store.db.Model(&model.User{}).Where("id=?", id).Update("token", token).Error
 }
 
 func hashPassword(s *string) error {
@@ -118,8 +109,4 @@ func hashPassword(s *string) error {
 
 func checkPassword(existingHash, incomingPass string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(existingHash), []byte(incomingPass)) == nil
-}
-
-func (r *UserRepository) GetAll() (users []model.User, err error) {
-	return users, r.store.db.Select("id, firstname, lastname, email, inn").Find(&users).Error
 }

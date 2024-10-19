@@ -204,6 +204,11 @@ func (s *server) SignIn(ctx *gin.Context) {
 		return
 	}
 
+	err = s.store.User().UpdateToken(user.ID, tokenString)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed update JWT user"})
+		return
+	}
 	setCookie(ctx, tokenString)
 	ctx.JSON(http.StatusOK, user)
 }

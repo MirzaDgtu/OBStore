@@ -11,4 +11,5 @@ type UserRepository interface {
 	SignOutUserById(int) error
 	ChangePassword(int, string) error
 	GetAll() ([]model.User, error)
+	UpdateToken(uint, string) error
 }

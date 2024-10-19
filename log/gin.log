@@ -50,11 +50,5 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-[GIN] 2024/10/20 - 01:25:14 | 500 |     55.4729ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/20 - 01:25:14 | 500 |     55.4729ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/20 - 01:26:54 | 500 |      1.0544ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/20 - 01:26:54 | 500 |      1.0544ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/20 - 01:26:59 | 200 |     56.8998ms |             ::1 | POST     "/api/v1/user/update/pass"
-[GIN] 2024/10/20 - 01:26:59 | 200 |     56.8998ms |             ::1 | POST     "/api/v1/user/update/pass"
-[GIN] 2024/10/20 - 01:27:02 | 200 |     57.8011ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/20 - 01:27:02 | 200 |     57.8011ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/20 - 01:43:09 | 200 |     60.9015ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/20 - 01:43:09 | 200 |     60.9015ms |             ::1 | POST     "/api/v1/users/signin"
