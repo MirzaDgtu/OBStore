@@ -12,4 +12,5 @@ type UserRepository interface {
 	ChangePassword(int, string) error
 	GetAll() ([]model.User, error)
 	UpdateToken(uint, string) error
+	UserFromID(float64) (model.User, error)
 }

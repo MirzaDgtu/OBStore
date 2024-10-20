@@ -2,6 +2,7 @@ package apiserver
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"obstore/internal/model"
 	"obstore/internal/store"
@@ -15,6 +16,10 @@ import (
 var (
 	errIncorrectEmailOrPassword = errors.New("incorrect email or password")
 	errNotAuthenticated         = errors.New("not autenticated")
+)
+
+var (
+	hmacSampleSecret = "8a046a6b436496d9c7af3e196a73ee9948677eb30b251706667ad59d6261bd78d2f6f501a6dea0118cfb3b0dcd62d6c9eb88142e2c24c2c686133a935cd65651"
 )
 
 type server struct {
@@ -57,15 +62,15 @@ func (s *server) configureRouter() {
 		userGroup := apiGroup.Group("/user")
 		{
 			userGroup.POST("/signout", s.SignOutUserById)
-			userGroup.POST("/update", s.UpdateUser)
-			userGroup.POST("/update/pass", s.UpdatePassword)
+			userGroup.POST("/update", s.AuthMW, s.UpdateUser)
+			userGroup.POST("/update/pass", s.AuthMW, s.UpdatePassword)
 		}
 
 		usersGroup := apiGroup.Group("/users")
 		{
 			usersGroup.POST("", s.CreateUser)
 			usersGroup.POST("/signin", s.SignIn)
-			usersGroup.GET("", s.GetUserAll)
+			usersGroup.GET("", s.AuthMW, s.GetUserAll)
 		}
 
 		teamGroup := apiGroup.Group("/team")
@@ -200,13 +205,13 @@ func (s *server) SignIn(ctx *gin.Context) {
 
 	tokenString, err := createAndSignJWT(&user)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "JWT creation failed"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "JWT creation failed. Error: " + err.Error()})
 		return
 	}
 
 	err = s.store.User().UpdateToken(user.ID, tokenString)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed update JWT user"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed update JWT user. Error: " + err.Error()})
 		return
 	}
 	setCookie(ctx, tokenString)
@@ -867,7 +872,6 @@ func createAndSignJWT(user *model.User) (string, error) {
 		"ttl":    time.Now().Add(time.Hour * 24 * 100).Unix(),
 	})
 
-	hmacSampleSecret := "8a046a6b436496d9c7af3e196a73ee9948677eb30b251706667ad59d6261bd78d2f6f501a6dea0118cfb3b0dcd62d6c9eb88142e2c24c2c686133a935cd65651"
 	// Sign and get the complete encoded token as a string using the secret
 	return token.SignedString([]byte(hmacSampleSecret))
 }
@@ -875,4 +879,50 @@ func createAndSignJWT(user *model.User) (string, error) {
 func setCookie(ctx *gin.Context, token string) {
 	ctx.SetSameSite(http.SameSiteLaxMode)
 	ctx.SetCookie("Auth", token, 3600*24*100, "", "", false, true)
+}
+
+func (s *server) AuthMW(ctx *gin.Context) {
+	// Получение токена из куки
+	tokenStr, err := ctx.Cookie("Auth")
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "No auth token"})
+		ctx.Abort()
+	}
+
+	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		// Don't forget to validate the alg is what you expect:
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
+		return []byte(hmacSampleSecret), nil
+	})
+
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Failed to parse JWT"})
+		ctx.Abort()
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "JWT Claims failed"})
+		ctx.Abort()
+	}
+
+	if claims["ttl"].(float64) < float64(time.Now().Unix()) {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "JWT token expired"})
+		ctx.Abort()
+	}
+
+	user, err := s.store.User().UserFromID(claims["userID"].(float64))
+
+	if user.ID == 0 {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Could not find the user!"})
+		ctx.Abort()
+	}
+
+	ctx.Set("user", user)
+
+	ctx.Next()
 }

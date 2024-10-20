@@ -18,6 +18,8 @@ import (
 func Start(config *Config) error {
 	gin.DisableConsoleColor()
 	f, _ := os.Create("log\\gin.log")
+	//	ct := time.Now()
+	//	f, _ := os.Create("log\\log-" + ct.Format(time.DateTime) + ".log")
 	gin.DefaultWriter = io.MultiWriter(f)
 
 	db, err := newDB(config.DatabaseURL)

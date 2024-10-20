@@ -15,11 +15,11 @@
 	- login.html
 
 [GIN-debug] POST   /api/v1/user/signout      --> obstore/internal/apiserver.(*server).SignOutUserById-fm (5 handlers)
-[GIN-debug] POST   /api/v1/user/update       --> obstore/internal/apiserver.(*server).UpdateUser-fm (5 handlers)
-[GIN-debug] POST   /api/v1/user/update/pass  --> obstore/internal/apiserver.(*server).UpdatePassword-fm (5 handlers)
+[GIN-debug] POST   /api/v1/user/update       --> obstore/internal/apiserver.(*server).UpdateUser-fm (6 handlers)
+[GIN-debug] POST   /api/v1/user/update/pass  --> obstore/internal/apiserver.(*server).UpdatePassword-fm (6 handlers)
 [GIN-debug] POST   /api/v1/users             --> obstore/internal/apiserver.(*server).CreateUser-fm (5 handlers)
 [GIN-debug] POST   /api/v1/users/signin      --> obstore/internal/apiserver.(*server).SignIn-fm (5 handlers)
-[GIN-debug] GET    /api/v1/users             --> obstore/internal/apiserver.(*server).GetUserAll-fm (5 handlers)
+[GIN-debug] GET    /api/v1/users             --> obstore/internal/apiserver.(*server).GetUserAll-fm (6 handlers)
 [GIN-debug] GET    /api/v1/team              --> obstore/internal/apiserver.(*server).GetTeamById-fm (5 handlers)
 [GIN-debug] POST   /api/v1/team/delete       --> obstore/internal/apiserver.(*server).DeteleTeamById-fm (5 handlers)
 [GIN-debug] POST   /api/v1/team/update       --> obstore/internal/apiserver.(*server).UpdateTeam-fm (5 handlers)
@@ -50,5 +50,9 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-[GIN] 2024/10/20 - 01:43:09 | 200 |     60.9015ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/20 - 01:43:09 | 200 |     60.9015ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/20 - 22:17:01 | 200 |     79.2337ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/20 - 22:17:01 | 200 |     79.2337ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/20 - 22:17:05 | 200 |      59.163ms |             ::1 | POST     "/api/v1/user/update/pass"
+[GIN] 2024/10/20 - 22:17:05 | 200 |     59.3235ms |             ::1 | POST     "/api/v1/user/update/pass"
+[GIN] 2024/10/20 - 22:17:15 | 200 |      2.5653ms |             ::1 | POST     "/api/v1/user/signout"
+[GIN] 2024/10/20 - 22:17:15 | 200 |      2.5653ms |             ::1 | POST     "/api/v1/user/signout"

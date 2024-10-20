@@ -110,3 +110,7 @@ func hashPassword(s *string) error {
 func checkPassword(existingHash, incomingPass string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(existingHash), []byte(incomingPass)) == nil
 }
+
+func (r *UserRepository) UserFromID(id float64) (user model.User, err error) {
+	return user, r.store.db.Where("id=?", id).First(&user).Error
+}
