@@ -66,7 +66,9 @@ func (r *UserRepository) SignOutUserById(id int) error {
 		},
 	}
 
-	return r.store.db.Model(&user).Where("id = ?", id).Update("loggedin", 0).Error
+	return r.store.db.Model(&user).Where("id = ?", id).Updates(map[string]interface{}{"loggedin": 0,
+		"token":         "",
+		"refresh_token": ""}).Error
 }
 
 func (r *UserRepository) ChangePassword(id int, pass string) error {

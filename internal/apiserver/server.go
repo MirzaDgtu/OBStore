@@ -61,7 +61,7 @@ func (s *server) configureRouter() {
 	{
 		userGroup := apiGroup.Group("/user")
 		{
-			userGroup.POST("/signout", s.SignOutUserById)
+			userGroup.POST("/signout", s.AuthMW, s.SignOutUserById)
 			userGroup.POST("/update", s.AuthMW, s.UpdateUser)
 			userGroup.POST("/update/pass", s.AuthMW, s.UpdatePassword)
 		}
@@ -75,68 +75,68 @@ func (s *server) configureRouter() {
 
 		teamGroup := apiGroup.Group("/team")
 		{
-			teamGroup.GET("", s.GetTeamById)
-			teamGroup.POST("/delete", s.DeteleTeamById)
-			teamGroup.POST("/update", s.UpdateTeam)
-			teamGroup.POST("/teamcomposition", s.GetTeamComposition)
+			teamGroup.GET("", s.AuthMW, s.GetTeamById)
+			teamGroup.POST("/delete", s.AuthMW, s.DeteleTeamById)
+			teamGroup.POST("/update", s.AuthMW, s.UpdateTeam)
+			teamGroup.POST("/teamcomposition", s.AuthMW, s.GetTeamComposition)
 
 		}
 
 		teamsGroup := apiGroup.Group("/teams")
 		{
-			teamsGroup.POST("", s.CreateTeam)
-			teamsGroup.GET("", s.GetTeamAll)
+			teamsGroup.POST("", s.AuthMW, s.CreateTeam)
+			teamsGroup.GET("", s.AuthMW, s.GetTeamAll)
 		}
 
 		productGroup := apiGroup.Group("/product")
 		{
-			productGroup.GET("/find/article", s.GetProductByArticle)
-			productGroup.GET("/find/strikecode", s.GetProductByStrikeCode)
-			productGroup.GET("/find/name", s.GetProductByName)
-			productGroup.POST("/update/strikecode", s.UpdateProductStrikeCodeById)
+			productGroup.GET("/find/article", s.AuthMW, s.GetProductByArticle)
+			productGroup.GET("/find/strikecode", s.AuthMW, s.GetProductByStrikeCode)
+			productGroup.GET("/find/name", s.AuthMW, s.GetProductByName)
+			productGroup.POST("/update/strikecode", s.AuthMW, s.UpdateProductStrikeCodeById)
 		}
 
 		productsGroup := apiGroup.Group("/products")
 		{
-			productsGroup.POST("", s.CreateProduct)
-			productsGroup.GET("", s.GetProductsAll)
+			productsGroup.POST("", s.AuthMW, s.CreateProduct)
+			productsGroup.GET("", s.AuthMW, s.GetProductsAll)
 		}
 
 		orderGroup := apiGroup.Group("/order")
 		{
-			orderGroup.GET("/find/id", s.GetOrderById)
-			orderGroup.GET("/find/uid", s.GetOrderByUID)
-			orderGroup.GET("/find/num", s.GetOrderByFolioNum)
+			orderGroup.GET("/find/id", s.AuthMW, s.GetOrderById)
+			orderGroup.GET("/find/uid", s.AuthMW, s.GetOrderByUID)
+			orderGroup.GET("/find/num", s.AuthMW, s.GetOrderByFolioNum)
 		}
 
 		ordersGroup := apiGroup.Group("/orders")
 		{
-			ordersGroup.POST("", s.CreateOrder)
-			ordersGroup.GET("", s.GetOrdersAll)
-			ordersGroup.GET("/range", s.GetOrdersByDateRange)
-			ordersGroup.GET("/driver", s.GetOrdersByDriver)
-			ordersGroup.GET("/agent", s.GetOrdersByAgent)
+			ordersGroup.POST("", s.AuthMW, s.CreateOrder)
+			ordersGroup.GET("", s.AuthMW, s.GetOrdersAll)
+			ordersGroup.GET("/range", s.AuthMW, s.GetOrdersByDateRange)
+			ordersGroup.GET("/driver", s.AuthMW, s.GetOrdersByDriver)
+			ordersGroup.GET("/agent", s.AuthMW, s.GetOrdersByAgent)
 		}
 
 		teamCompositionGroup := apiGroup.Group("/teamcomposition")
 		{
-			teamCompositionGroup.GET("/", s.GetTeamCompositionById)
-			teamCompositionGroup.POST("/update", s.UpdateTeamComposition)
-			teamCompositionGroup.GET("/team", s.GetTeamCompositionByTeamId)
-			teamCompositionGroup.GET("/user", s.GetTeamCompositionByUserId)
+			teamCompositionGroup.GET("/", s.AuthMW, s.GetTeamCompositionById)
+			teamCompositionGroup.POST("/update", s.AuthMW, s.UpdateTeamComposition)
+			teamCompositionGroup.GET("/team", s.AuthMW, s.GetTeamCompositionByTeamId)
+			teamCompositionGroup.GET("/user", s.AuthMW, s.GetTeamCompositionByUserId)
 
 		}
 
 		teamCompositionsGroup := apiGroup.Group("/teamcompositions")
 		{
-			teamCompositionsGroup.POST("", s.CreateTeamComposition)
-			teamCompositionsGroup.GET("", s.GetTeamCompositionAll)
+			teamCompositionsGroup.POST("", s.AuthMW, s.CreateTeamComposition)
+			teamCompositionsGroup.GET("", s.AuthMW, s.GetTeamCompositionAll)
 
 		}
 
 		assemblyOrderGroup := apiGroup.Group("/assemblyorder")
 		{
-			assemblyOrderGroup.GET("/find/id", s.GetAssemblyOrderByID)
+			assemblyOrderGroup.GET("/find/id", s.AuthMW, s.GetAssemblyOrderByID)
 		}
 
 		/*
@@ -214,6 +214,8 @@ func (s *server) SignIn(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed update JWT user. Error: " + err.Error()})
 		return
 	}
+
+	user.Token = tokenString
 	setCookie(ctx, tokenString)
 	ctx.JSON(http.StatusOK, user)
 }
@@ -236,7 +238,9 @@ func (s *server) SignOutUserById(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "success"})
+	ctx.SetCookie("Auth", "deleted", 0, "", "", false, false)
+
+	ctx.JSON(http.StatusAccepted, gin.H{"message": "success"})
 }
 
 func (s *server) UpdateUser(ctx *gin.Context) {
