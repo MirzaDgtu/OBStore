@@ -8,4 +8,6 @@ type Store interface {
 	TeamComposition() TeamCompositionRepository
 	AssemblyOrder() AssemblyOrderRepository
 	Warehouse() WarehouseRepository
+	Role() RoleRepository
+	UserRole() UserRoleRepository
 }
