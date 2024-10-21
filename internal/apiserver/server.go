@@ -2,6 +2,7 @@ package apiserver
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"obstore/internal/model"
 	"obstore/internal/store"
@@ -9,11 +10,16 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 var (
 	errIncorrectEmailOrPassword = errors.New("incorrect email or password")
 	errNotAuthenticated         = errors.New("not autenticated")
+)
+
+var (
+	hmacSampleSecret = "8a046a6b436496d9c7af3e196a73ee9948677eb30b251706667ad59d6261bd78d2f6f501a6dea0118cfb3b0dcd62d6c9eb88142e2c24c2c686133a935cd65651"
 )
 
 type server struct {
@@ -27,6 +33,7 @@ func newServer(store store.Store) *server {
 		store:  store,
 	}
 
+	s.router.Use(gin.Logger())
 	s.router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST"},
@@ -54,82 +61,82 @@ func (s *server) configureRouter() {
 	{
 		userGroup := apiGroup.Group("/user")
 		{
-			userGroup.POST("/signout", s.SignOutUserById)
-			userGroup.POST("/update", s.UpdateUser)
-			userGroup.POST("/update/pass", s.UpdatePassword)
+			userGroup.POST("/signout", s.AuthMW, s.SignOutUserById)
+			userGroup.POST("/update", s.AuthMW, s.UpdateUser)
+			userGroup.POST("/update/pass", s.AuthMW, s.UpdatePassword)
 		}
 
 		usersGroup := apiGroup.Group("/users")
 		{
 			usersGroup.POST("", s.CreateUser)
 			usersGroup.POST("/signin", s.SignIn)
-			usersGroup.GET("", s.GetUserAll)
+			usersGroup.GET("", s.AuthMW, s.GetUserAll)
 		}
 
 		teamGroup := apiGroup.Group("/team")
 		{
-			teamGroup.GET("", s.GetTeamById)
-			teamGroup.POST("/delete", s.DeteleTeamById)
-			teamGroup.POST("/update", s.UpdateTeam)
-			teamGroup.POST("/teamcomposition", s.GetTeamComposition)
+			teamGroup.GET("", s.AuthMW, s.GetTeamById)
+			teamGroup.POST("/delete", s.AuthMW, s.DeteleTeamById)
+			teamGroup.POST("/update", s.AuthMW, s.UpdateTeam)
+			teamGroup.POST("/teamcomposition", s.AuthMW, s.GetTeamComposition)
 
 		}
 
 		teamsGroup := apiGroup.Group("/teams")
 		{
-			teamsGroup.POST("", s.CreateTeam)
-			teamsGroup.GET("", s.GetTeamAll)
+			teamsGroup.POST("", s.AuthMW, s.CreateTeam)
+			teamsGroup.GET("", s.AuthMW, s.GetTeamAll)
 		}
 
 		productGroup := apiGroup.Group("/product")
 		{
-			productGroup.GET("/find/article", s.GetProductByArticle)
-			productGroup.GET("/find/strikecode", s.GetProductByStrikeCode)
-			productGroup.GET("/find/name", s.GetProductByName)
-			productGroup.POST("/update/strikecode", s.UpdateProductStrikeCodeById)
+			productGroup.GET("/find/article", s.AuthMW, s.GetProductByArticle)
+			productGroup.GET("/find/strikecode", s.AuthMW, s.GetProductByStrikeCode)
+			productGroup.GET("/find/name", s.AuthMW, s.GetProductByName)
+			productGroup.POST("/update/strikecode", s.AuthMW, s.UpdateProductStrikeCodeById)
 		}
 
 		productsGroup := apiGroup.Group("/products")
 		{
-			productsGroup.POST("", s.CreateProduct)
-			productsGroup.GET("", s.GetProductsAll)
+			productsGroup.POST("", s.AuthMW, s.CreateProduct)
+			productsGroup.GET("", s.AuthMW, s.GetProductsAll)
 		}
 
 		orderGroup := apiGroup.Group("/order")
 		{
-			orderGroup.GET("/find/id", s.GetOrderById)
-			orderGroup.GET("/find/uid", s.GetOrderByUID)
-			orderGroup.GET("/find/num", s.GetOrderByFolioNum)
+			orderGroup.GET("/find/id", s.AuthMW, s.GetOrderById)
+			orderGroup.GET("/find/uid", s.AuthMW, s.GetOrderByUID)
+			orderGroup.GET("/find/num", s.AuthMW, s.GetOrderByFolioNum)
 		}
 
 		ordersGroup := apiGroup.Group("/orders")
 		{
-			ordersGroup.POST("", s.CreateOrder)
-			ordersGroup.GET("", s.GetOrdersAll)
-			ordersGroup.GET("/range", s.GetOrdersByDateRange)
-			ordersGroup.GET("/driver", s.GetOrdersByDriver)
-			ordersGroup.GET("/agent", s.GetOrdersByAgent)
+			ordersGroup.POST("", s.AuthMW, s.CreateOrder)
+			ordersGroup.GET("", s.AuthMW, s.GetOrdersAll)
+			ordersGroup.GET("/range", s.AuthMW, s.GetOrdersByDateRange)
+			ordersGroup.GET("/driver", s.AuthMW, s.GetOrdersByDriver)
+			ordersGroup.GET("/agent", s.AuthMW, s.GetOrdersByAgent)
 		}
 
 		teamCompositionGroup := apiGroup.Group("/teamcomposition")
 		{
-			teamCompositionGroup.GET("/", s.GetTeamCompositionById)
-			teamCompositionGroup.POST("/update", s.UpdateTeamComposition)
-			teamCompositionGroup.GET("/team", s.GetTeamCompositionByTeamId)
-			teamCompositionGroup.GET("/user", s.GetTeamCompositionByUserId)
+			teamCompositionGroup.GET("/", s.AuthMW, s.GetTeamCompositionById)
+			teamCompositionGroup.POST("/update", s.AuthMW, s.UpdateTeamComposition)
+			teamCompositionGroup.GET("/team", s.AuthMW, s.GetTeamCompositionByTeamId)
+			teamCompositionGroup.GET("/user", s.AuthMW, s.GetTeamCompositionByUserId)
 
 		}
 
 		teamCompositionsGroup := apiGroup.Group("/teamcompositions")
 		{
-			teamCompositionsGroup.POST("", s.CreateTeamComposition)
-			teamCompositionsGroup.GET("", s.GetTeamCompositionAll)
+			teamCompositionsGroup.POST("", s.AuthMW, s.CreateTeamComposition)
+			teamCompositionsGroup.GET("", s.AuthMW, s.GetTeamCompositionAll)
 
 		}
 
 		assemblyOrderGroup := apiGroup.Group("/assemblyorder")
 		{
-			assemblyOrderGroup.GET("/find/id", s.GetAssemblyOrderByID)
+			assemblyOrderGroup.GET("/find/id", s.AuthMW, s.GetAssemblyOrderByID)
 		}
 
 		/*
@@ -141,24 +148,27 @@ func (s *server) configureRouter() {
 
 	}
 
-	// Маршруты для сайта
-	viewGroup := s.router.Group("/view")
-	{
-		viewGroup.GET("/login", s.LoginHTML)
-
-		userGroup := viewGroup.Group("/user")
+	/*
+		// Маршруты для сайта
+		viewGroup := s.router.Group("/view")
 		{
-			userGroup.POST("/signout", s.SignOutUserById)
-			userGroup.POST("/update", s.UpdateUser)
-			userGroup.POST("/update/pass", s.UpdatePassword)
+			viewGroup.GET("/login", s.LoginHTML)
+
+			userGroup := viewGroup.Group("/user")
+			{
+				userGroup.POST("/signout", s.SignOutUserById)
+				userGroup.POST("/update", s.UpdateUser)
+				userGroup.POST("/update/pass", s.UpdatePassword)
+			}
+
+			usersGroup := userGroup.Group("/users")
+			{
+				usersGroup.POST("", s.CreateUser)
+				usersGroup.POST("/signin", s.SignIn)
+			}
 		}
 
-		usersGroup := userGroup.Group("/users")
-		{
-			usersGroup.POST("", s.CreateUser)
-			usersGroup.POST("/signin", s.SignIn)
-		}
-	}
+	*/
 }
 
 // User..
@@ -193,6 +203,20 @@ func (s *server) SignIn(ctx *gin.Context) {
 		return
 	}
 
+	tokenString, err := createAndSignJWT(&user)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "JWT creation failed. Error: " + err.Error()})
+		return
+	}
+
+	err = s.store.User().UpdateToken(user.ID, tokenString)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed update JWT user. Error: " + err.Error()})
+		return
+	}
+
+	user.Token = tokenString
+	setCookie(ctx, tokenString)
 	ctx.JSON(http.StatusOK, user)
 }
 
@@ -214,7 +238,9 @@ func (s *server) SignOutUserById(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "success"})
+	ctx.SetCookie("Auth", "deleted", 0, "", "", false, false)
+
+	ctx.JSON(http.StatusAccepted, gin.H{"message": "success"})
 }
 
 func (s *server) UpdateUser(ctx *gin.Context) {
@@ -840,4 +866,67 @@ func (s *server) GetAssemblyOrderByID(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, ao)
+}
+
+func createAndSignJWT(user *model.User) (string, error) {
+	// Create a new token object, specifying signing method and the claims
+	// you would like it to contain.
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"userID": user.ID,
+		"ttl":    time.Now().Add(time.Hour * 24 * 100).Unix(),
+	})
+
+	// Sign and get the complete encoded token as a string using the secret
+	return token.SignedString([]byte(hmacSampleSecret))
+}
+
+func setCookie(ctx *gin.Context, token string) {
+	ctx.SetSameSite(http.SameSiteLaxMode)
+	ctx.SetCookie("Auth", token, 3600*24*100, "", "", false, true)
+}
+
+func (s *server) AuthMW(ctx *gin.Context) {
+	// Получение токена из куки
+	tokenStr, err := ctx.Cookie("Auth")
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "No auth token"})
+		ctx.Abort()
+	}
+
+	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		// Don't forget to validate the alg is what you expect:
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
+		return []byte(hmacSampleSecret), nil
+	})
+
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Failed to parse JWT"})
+		ctx.Abort()
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "JWT Claims failed"})
+		ctx.Abort()
+	}
+
+	if claims["ttl"].(float64) < float64(time.Now().Unix()) {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "JWT token expired"})
+		ctx.Abort()
+	}
+
+	user, err := s.store.User().UserFromID(claims["userID"].(float64))
+
+	if user.ID == 0 {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Could not find the user!"})
+		ctx.Abort()
+	}
+
+	ctx.Set("user", user)
+
+	ctx.Next()
 }

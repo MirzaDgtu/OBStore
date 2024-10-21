@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"errors"
+	"fmt"
 	"obstore/internal/model"
 
 	"golang.org/x/crypto/bcrypt"
@@ -65,27 +66,31 @@ func (r *UserRepository) SignOutUserById(id int) error {
 		},
 	}
 
-	return r.store.db.Model(&user).Where("id = ?", id).Update("loggedin", 0).Error
+	return r.store.db.Model(&user).Where("id = ?", id).Updates(map[string]interface{}{"loggedin": 0,
+		"token":         "",
+		"refresh_token": ""}).Error
 }
 
 func (r *UserRepository) ChangePassword(id int, pass string) error {
+
+	fmt.Println(pass)
+	err := hashPassword(&pass)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(pass)
+
 	var user model.User
-	result := r.store.db.Table("users").Where("id = ?", id)
-	err := result.First(&user).Error
-	if err != nil {
-		return err
-	}
+	return r.store.db.Model(&user).Where("id=?", id).Update("pass", pass).Error
+}
 
-	err = hashPassword(&pass)
-	if err != nil {
-		return err
-	}
+func (r *UserRepository) GetAll() (users []model.User, err error) {
+	return users, r.store.db.Select("id, firstname, lastname, email, inn").Find(&users).Error
+}
 
-	err = result.Update("pass", pass).Error
-	if err != nil {
-		return err
-	}
-	return nil
+func (r *UserRepository) UpdateToken(id uint, token string) error {
+	return r.store.db.Model(&model.User{}).Where("id=?", id).Update("token", token).Error
 }
 
 func hashPassword(s *string) error {
@@ -108,6 +113,6 @@ func checkPassword(existingHash, incomingPass string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(existingHash), []byte(incomingPass)) == nil
 }
 
-func (r *UserRepository) GetAll() (users []model.User, err error) {
-	return users, r.store.db.Select("id, firstname, lastname, email, inn").Find(&users).Error
+func (r *UserRepository) UserFromID(id float64) (user model.User, err error) {
+	return user, r.store.db.Where("id=?", id).First(&user).Error
 }
