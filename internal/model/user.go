@@ -15,6 +15,7 @@ type User struct {
 	Token        string `gorm:"column:token" json:"token"`
 	RefreshToken string `gorm:"column:refresh_token" json:"refresh_token"`
 	Teams        []Team `gorm:"many2many:teamcompositions;" json:"teams"`
+	Roles        []Role `gorm:"many2many:user_roles;" json:"user_roles"`
 }
 
 func (User) TableName() string {
