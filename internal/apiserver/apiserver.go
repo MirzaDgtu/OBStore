@@ -65,7 +65,8 @@ func newDB(databaseURL string) (*gorm.DB, error) {
 }
 
 func dbMigrate(db *gorm.DB) {
-	db.AutoMigrate(&model.User{}, &model.Team{}, &model.TeamComposition{},
-		&model.Product{}, &model.Order{}, &model.OrderDetails{},
-		&model.AssemblyOrder{}, &model.AssemblyOrderDetails{})
+	db.AutoMigrate(&model.User{}, &model.Team{}, &model.TeamComposition{}, &model.Product{})
+	db.AutoMigrate(&model.AssemblyOrder{}, &model.AssemblyOrderDetails{})
+
+	db.AutoMigrate(&model.Order{}, &model.OrderDetails{})
 }
