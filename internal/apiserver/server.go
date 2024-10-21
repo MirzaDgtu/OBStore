@@ -71,6 +71,7 @@ func (s *server) configureRouter() {
 			usersGroup.POST("", s.CreateUser)
 			usersGroup.POST("/signin", s.SignIn)
 			usersGroup.GET("", s.AuthMW, s.GetUserAll)
+			usersGroup.POST("/password/restore", s.SetUserTemporaryPassword)
 		}
 
 		teamGroup := apiGroup.Group("/team", s.AuthMW)
@@ -301,6 +302,27 @@ func (s *server) GetUserAll(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, users)
+}
+
+func (s *server) SetUserTemporaryPassword(ctx *gin.Context) {
+	type request struct {
+		Email string `json:"email"`
+	}
+
+	var req request
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	pass, err := s.store.User().SetTemporaryPassword(req.Email)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"password": pass})
 }
 
 // Team...
@@ -1038,6 +1060,7 @@ func (s *server) DeleteWarehouseById(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Запись успешно удалена"})
 }
+
 func (s *server) CreateAssemblyOrder(ctx *gin.Context) {
 	var ao model.AssemblyOrder
 	err := ctx.ShouldBindJSON(&ao)

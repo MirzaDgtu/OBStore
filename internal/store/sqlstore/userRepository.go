@@ -1,6 +1,8 @@
 package sqlstore
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"obstore/internal/model"
@@ -115,4 +117,31 @@ func checkPassword(existingHash, incomingPass string) bool {
 
 func (r *UserRepository) UserFromID(id float64) (user model.User, err error) {
 	return user, r.store.db.Where("id=?", id).First(&user).Error
+}
+
+// Функция для генерации временного пароля
+func generateTemporaryPassword() (string, error) {
+	bytes := make([]byte, 6) // Длина пароля
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+	return base64.URLEncoding.EncodeToString(bytes), nil
+}
+
+func (r *UserRepository) SetTemporaryPassword(email string) (string, error) {
+	pass, err := generateTemporaryPassword()
+	if err != nil {
+		return "", err
+	}
+
+	var user model.User
+	result := r.store.db.Table("users").Where("email=?", email)
+	err = result.First(&user).Error
+	if err != nil {
+		return "", err
+	}
+
+	hPass := pass
+	hashPassword(&hPass)
+	return pass, r.store.db.Model(&model.User{}).Where("id=?", user.ID).Update("pass", hPass).Error
 }

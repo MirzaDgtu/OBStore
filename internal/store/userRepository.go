@@ -13,4 +13,5 @@ type UserRepository interface {
 	GetAll() ([]model.User, error)
 	UpdateToken(uint, string) error
 	UserFromID(float64) (model.User, error)
+	SetTemporaryPassword(string) (string, error)
 }
