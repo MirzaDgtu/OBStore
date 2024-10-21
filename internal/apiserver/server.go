@@ -54,15 +54,15 @@ func (s *server) configureRouter() {
 	s.router.Static("/css", "./frontend/css/")
 	s.router.StaticFS("/scripts", http.Dir("./frontend/scripts"))
 	s.router.StaticFile("/favicon.png", "./fronend/warehouse.png")
-	s.router.LoadHTMLGlob("frontend/templates/*.html")
+	s.router.LoadHTMLGlob("frontend/**/*")
 
 	// Маршруты для API
 	apiGroup := s.router.Group("/api/v1")
 	{
-		userGroup := apiGroup.Group("/user")
+		userGroup := apiGroup.Group("/user", s.AuthMW)
 		{
-			userGroup.POST("/signout", s.AuthMW, s.SignOutUserById)
-			userGroup.POST("/update", s.AuthMW, s.UpdateUser)
+			userGroup.POST("/signout", s.SignOutUserById)
+			userGroup.POST("/update", s.UpdateUser)
 			userGroup.POST("/update/pass", s.UpdatePassword) // s.AuthMW,
 		}
 
@@ -73,89 +73,89 @@ func (s *server) configureRouter() {
 			usersGroup.GET("", s.AuthMW, s.GetUserAll)
 		}
 
-		teamGroup := apiGroup.Group("/team")
+		teamGroup := apiGroup.Group("/team", s.AuthMW)
 		{
-			teamGroup.GET("", s.AuthMW, s.GetTeamById)
-			teamGroup.POST("/delete", s.AuthMW, s.DeteleTeamById)
-			teamGroup.POST("/update", s.AuthMW, s.UpdateTeam)
-			teamGroup.POST("/teamcomposition", s.AuthMW, s.GetTeamComposition)
+			teamGroup.GET("", s.GetTeamById)
+			teamGroup.POST("/delete", s.DeteleTeamById)
+			teamGroup.POST("/update", s.UpdateTeam)
+			teamGroup.POST("/teamcomposition", s.GetTeamComposition)
 
 		}
 
-		teamsGroup := apiGroup.Group("/teams")
+		teamsGroup := apiGroup.Group("/teams", s.AuthMW)
 		{
-			teamsGroup.POST("", s.AuthMW, s.CreateTeam)
-			teamsGroup.GET("", s.AuthMW, s.GetTeamAll)
+			teamsGroup.POST("", s.CreateTeam)
+			teamsGroup.GET("", s.GetTeamAll)
 		}
 
-		productGroup := apiGroup.Group("/product")
+		productGroup := apiGroup.Group("/product", s.AuthMW)
 		{
-			productGroup.GET("/find/article", s.AuthMW, s.GetProductByArticle)
-			productGroup.GET("/find/strikecode", s.AuthMW, s.GetProductByStrikeCode)
-			productGroup.GET("/find/name", s.AuthMW, s.GetProductByName)
-			productGroup.POST("/update/strikecode", s.AuthMW, s.UpdateProductStrikeCodeById)
+			productGroup.GET("/find/article", s.GetProductByArticle)
+			productGroup.GET("/find/strikecode", s.GetProductByStrikeCode)
+			productGroup.GET("/find/name", s.GetProductByName)
+			productGroup.POST("/update/strikecode", s.UpdateProductStrikeCodeById)
 		}
 
-		productsGroup := apiGroup.Group("/products")
+		productsGroup := apiGroup.Group("/products", s.AuthMW)
 		{
-			productsGroup.POST("", s.AuthMW, s.CreateProduct)
-			productsGroup.GET("", s.AuthMW, s.GetProductsAll)
+			productsGroup.POST("", s.CreateProduct)
+			productsGroup.GET("", s.GetProductsAll)
 		}
 
-		orderGroup := apiGroup.Group("/order")
+		orderGroup := apiGroup.Group("/order", s.AuthMW)
 		{
-			orderGroup.GET("/find/id", s.AuthMW, s.GetOrderById)
-			orderGroup.GET("/find/uid", s.AuthMW, s.GetOrderByUID)
-			orderGroup.GET("/find/num", s.AuthMW, s.GetOrderByFolioNum)
+			orderGroup.GET("/find/id", s.GetOrderById)
+			orderGroup.GET("/find/uid", s.GetOrderByUID)
+			orderGroup.GET("/find/num", s.GetOrderByFolioNum)
 		}
 
-		ordersGroup := apiGroup.Group("/orders")
+		ordersGroup := apiGroup.Group("/orders", s.AuthMW)
 		{
-			ordersGroup.POST("", s.AuthMW, s.CreateOrder)
-			ordersGroup.GET("", s.AuthMW, s.GetOrdersAll)
-			ordersGroup.GET("/range", s.AuthMW, s.GetOrdersByDateRange)
-			ordersGroup.GET("/driver", s.AuthMW, s.GetOrdersByDriver)
-			ordersGroup.GET("/agent", s.AuthMW, s.GetOrdersByAgent)
+			ordersGroup.POST("", s.CreateOrder)
+			ordersGroup.GET("", s.GetOrdersAll)
+			ordersGroup.GET("/range", s.GetOrdersByDateRange)
+			ordersGroup.GET("/driver", s.GetOrdersByDriver)
+			ordersGroup.GET("/agent", s.GetOrdersByAgent)
 		}
 
-		teamCompositionGroup := apiGroup.Group("/teamcomposition")
+		teamCompositionGroup := apiGroup.Group("/teamcomposition", s.AuthMW)
 		{
-			teamCompositionGroup.GET("/", s.AuthMW, s.GetTeamCompositionById)
-			teamCompositionGroup.POST("/update", s.AuthMW, s.UpdateTeamComposition)
-			teamCompositionGroup.GET("/team", s.AuthMW, s.GetTeamCompositionByTeamId)
-			teamCompositionGroup.GET("/user", s.AuthMW, s.GetTeamCompositionByUserId)
-
-		}
-
-		teamCompositionsGroup := apiGroup.Group("/teamcompositions")
-		{
-			teamCompositionsGroup.POST("", s.AuthMW, s.CreateTeamComposition)
-			teamCompositionsGroup.GET("", s.AuthMW, s.GetTeamCompositionAll)
+			teamCompositionGroup.GET("/", s.GetTeamCompositionById)
+			teamCompositionGroup.POST("/update", s.UpdateTeamComposition)
+			teamCompositionGroup.GET("/team", s.GetTeamCompositionByTeamId)
+			teamCompositionGroup.GET("/user", s.GetTeamCompositionByUserId)
 
 		}
 
-		assemblyOrderGroup := apiGroup.Group("/assemblyorder")
+		teamCompositionsGroup := apiGroup.Group("/teamcompositions", s.AuthMW)
 		{
-			assemblyOrderGroup.GET("/find/id", s.AuthMW, s.GetAssemblyOrderByID)
-		}
-
-		assemblyOrdersGroup := apiGroup.Group("/assemblyorders")
-		{
-			assemblyOrdersGroup.POST("", s.AuthMW, s.CreateAssemblyOrder)
-		}
-
-		warehousesGroup := apiGroup.Group("/warehouses")
-		{
-			warehousesGroup.GET("", s.AuthMW, s.GetWarehouseAll)
-			warehousesGroup.POST("", s.AuthMW, s.CreateWarehouse)
+			teamCompositionsGroup.POST("", s.CreateTeamComposition)
+			teamCompositionsGroup.GET("", s.GetTeamCompositionAll)
 
 		}
 
-		warehouseGroup := apiGroup.Group("/warehouse")
+		assemblyOrderGroup := apiGroup.Group("/assemblyorder", s.AuthMW)
 		{
-			warehouseGroup.GET("/find/id", s.AuthMW, s.GetWarehouseById)
-			warehouseGroup.POST("/update", s.AuthMW, s.UpdateWarehouse)
-			warehouseGroup.POST("/delete", s.AuthMW, s.DeleteWarehouseById)
+			assemblyOrderGroup.GET("/find/id", s.GetAssemblyOrderByID)
+		}
+
+		assemblyOrdersGroup := apiGroup.Group("/assemblyorders", s.AuthMW)
+		{
+			assemblyOrdersGroup.POST("", s.CreateAssemblyOrder)
+		}
+
+		warehousesGroup := apiGroup.Group("/warehouses", s.AuthMW)
+		{
+			warehousesGroup.GET("", s.GetWarehouseAll)
+			warehousesGroup.POST("", s.CreateWarehouse)
+
+		}
+
+		warehouseGroup := apiGroup.Group("/warehouse", s.AuthMW)
+		{
+			warehouseGroup.GET("/find/id", s.GetWarehouseById)
+			warehouseGroup.POST("/update", s.UpdateWarehouse)
+			warehouseGroup.POST("/delete", s.DeleteWarehouseById)
 		}
 
 	}
