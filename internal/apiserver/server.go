@@ -63,7 +63,7 @@ func (s *server) configureRouter() {
 		{
 			userGroup.POST("/signout", s.AuthMW, s.SignOutUserById)
 			userGroup.POST("/update", s.AuthMW, s.UpdateUser)
-			userGroup.POST("/update/pass", s.AuthMW, s.UpdatePassword)
+			userGroup.POST("/update/pass", s.UpdatePassword) // s.AuthMW,
 		}
 
 		usersGroup := apiGroup.Group("/users")
@@ -139,12 +139,24 @@ func (s *server) configureRouter() {
 			assemblyOrderGroup.GET("/find/id", s.AuthMW, s.GetAssemblyOrderByID)
 		}
 
-		/*
-			assemblyOrdersGroup := apiGroup.Group("/assemblyorders")
-			{
+		assemblyOrdersGroup := apiGroup.Group("/assemblyorders")
+		{
+			assemblyOrdersGroup.POST("", s.AuthMW, s.CreateAssemblyOrder)
+		}
 
-			}
-		*/
+		warehousesGroup := apiGroup.Group("/warehouses")
+		{
+			warehousesGroup.GET("", s.AuthMW, s.GetWarehouseAll)
+			warehousesGroup.POST("", s.AuthMW, s.CreateWarehouse)
+
+		}
+
+		warehouseGroup := apiGroup.Group("/warehouse")
+		{
+			warehouseGroup.GET("/find/id", s.AuthMW, s.GetWarehouseById)
+			warehouseGroup.POST("/update", s.AuthMW, s.UpdateWarehouse)
+			warehouseGroup.POST("/delete", s.AuthMW, s.DeleteWarehouseById)
+		}
 
 	}
 
@@ -929,4 +941,117 @@ func (s *server) AuthMW(ctx *gin.Context) {
 	ctx.Set("user", user)
 
 	ctx.Next()
+}
+
+func (s *server) GetWarehouseAll(ctx *gin.Context) {
+	warehouse, err := s.store.Warehouse().GetAll()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, warehouse)
+}
+
+func (s *server) GetWarehouseById(ctx *gin.Context) {
+	type request struct {
+		ID uint `json:"id"`
+	}
+
+	var req request
+	err := ctx.ShouldBindJSON(&req)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	fmt.Println(req.ID)
+
+	wh, err := s.store.Warehouse().GetByID(req.ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, wh)
+}
+
+func (s *server) CreateWarehouse(ctx *gin.Context) {
+	var reqs []model.Warehouse
+
+	err := ctx.ShouldBindJSON(&reqs)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var createdWarhouse []model.Warehouse
+	for _, req := range reqs {
+		warehouse, err := s.store.Warehouse().Create(req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			continue
+		} else {
+			createdWarhouse = append(createdWarhouse, warehouse)
+		}
+
+	}
+	ctx.JSON(http.StatusCreated, createdWarhouse)
+}
+
+func (s *server) UpdateWarehouse(ctx *gin.Context) {
+	var warehouse model.Warehouse
+	err := ctx.ShouldBindJSON(&warehouse)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Обновляем склад
+	updatedWarehouse, err := s.store.Warehouse().Update(warehouse)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Возвращаем обновленный объект
+	ctx.JSON(http.StatusOK, updatedWarehouse)
+}
+
+func (s *server) DeleteWarehouseById(ctx *gin.Context) {
+	type request struct {
+		Id uint `json:"id"`
+	}
+
+	var req request
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Удаляем запись по ID
+	err = s.store.Warehouse().DeleteByID(req.Id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Запись успешно удалена"})
+}
+func (s *server) CreateAssemblyOrder(ctx *gin.Context) {
+	var ao model.AssemblyOrder
+	err := ctx.ShouldBindJSON(&ao)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Удаляем запись по ID
+	ao, err = s.store.AssemblyOrder().Create(ao)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, ao)
 }

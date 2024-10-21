@@ -11,12 +11,12 @@
 [GIN-debug] GET    /favicon.png              --> obstore/internal/apiserver.(*server).configureRouter.(*RouterGroup).StaticFile.func1 (5 handlers)
 [GIN-debug] HEAD   /favicon.png              --> obstore/internal/apiserver.(*server).configureRouter.(*RouterGroup).StaticFile.func1 (5 handlers)
 [GIN-debug] Loaded HTML Templates (2): 
-	- login.html
 	- 
+	- login.html
 
 [GIN-debug] POST   /api/v1/user/signout      --> obstore/internal/apiserver.(*server).SignOutUserById-fm (6 handlers)
 [GIN-debug] POST   /api/v1/user/update       --> obstore/internal/apiserver.(*server).UpdateUser-fm (6 handlers)
-[GIN-debug] POST   /api/v1/user/update/pass  --> obstore/internal/apiserver.(*server).UpdatePassword-fm (6 handlers)
+[GIN-debug] POST   /api/v1/user/update/pass  --> obstore/internal/apiserver.(*server).UpdatePassword-fm (5 handlers)
 [GIN-debug] POST   /api/v1/users             --> obstore/internal/apiserver.(*server).CreateUser-fm (5 handlers)
 [GIN-debug] POST   /api/v1/users/signin      --> obstore/internal/apiserver.(*server).SignIn-fm (5 handlers)
 [GIN-debug] GET    /api/v1/users             --> obstore/internal/apiserver.(*server).GetUserAll-fm (6 handlers)
@@ -47,14 +47,12 @@
 [GIN-debug] POST   /api/v1/teamcompositions  --> obstore/internal/apiserver.(*server).CreateTeamComposition-fm (6 handlers)
 [GIN-debug] GET    /api/v1/teamcompositions  --> obstore/internal/apiserver.(*server).GetTeamCompositionAll-fm (6 handlers)
 [GIN-debug] GET    /api/v1/assemblyorder/find/id --> obstore/internal/apiserver.(*server).GetAssemblyOrderByID-fm (6 handlers)
+[GIN-debug] POST   /api/v1/assemblyorders    --> obstore/internal/apiserver.(*server).CreateAssemblyOrder-fm (6 handlers)
+[GIN-debug] GET    /api/v1/warehouses        --> obstore/internal/apiserver.(*server).GetWarehouseAll-fm (6 handlers)
+[GIN-debug] POST   /api/v1/warehouses        --> obstore/internal/apiserver.(*server).CreateWarehouse-fm (6 handlers)
+[GIN-debug] GET    /api/v1/warehouse/find/id --> obstore/internal/apiserver.(*server).GetWarehouseById-fm (6 handlers)
+[GIN-debug] POST   /api/v1/warehouse/update  --> obstore/internal/apiserver.(*server).UpdateWarehouse-fm (6 handlers)
+[GIN-debug] POST   /api/v1/warehouse/delete  --> obstore/internal/apiserver.(*server).DeleteWarehouseById-fm (6 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-[GIN] 2024/10/18 - 14:13:46 | 500 |     10.3475ms |             ::1 | GET      "/api/v1/assemblyorder/find/id"
-[GIN] 2024/10/18 - 14:14:52 | 200 |    117.5565ms |     172.16.4.23 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/18 - 14:14:53 | 200 |     14.4342ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/18 - 14:15:00 | 200 |     21.1789ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/18 - 14:16:44 | 200 |     26.5882ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/18 - 14:16:45 | 200 |       7.262ms |     172.16.4.23 | GET      "/api/v1/products"
-[GIN] 2024/10/18 - 14:18:40 | 200 |     34.0432ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/18 - 14:19:44 | 200 |     16.2039ms |     172.16.4.23 | GET      "/api/v1/orders"

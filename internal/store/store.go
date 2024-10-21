@@ -7,4 +7,5 @@ type Store interface {
 	Product() ProductRepository
 	TeamComposition() TeamCompositionRepository
 	AssemblyOrder() AssemblyOrderRepository
+	Warehouse() WarehouseRepository
 }
