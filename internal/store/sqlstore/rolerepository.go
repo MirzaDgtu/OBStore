@@ -26,3 +26,7 @@ func (r *RoleRepository) All() (roles []model.Role, err error) {
 	return roles, r.store.db.Find(&roles).Error
 
 }
+
+func (r *RoleRepository) UsersByIdRole(id uint, roles *model.Role) error {
+	return r.store.db.Where("id = ?", id).Preload("Users").First(roles).Error
+}

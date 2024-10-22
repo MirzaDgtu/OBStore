@@ -8,7 +8,6 @@ import (
 	"obstore/internal/store"
 	"time"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -34,20 +33,42 @@ func newServer(store store.Store) *server {
 	}
 
 	s.router.Use(gin.Logger())
-	s.router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
-		ExposeHeaders:    []string{"Content-Length", "application/json"},
-		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			return origin == "http://localhost:8090/view"
-		},
-		MaxAge: 24 * time.Hour,
-	}))
+	/*
+		s.router.Use(cors.New(cors.Config{
+			AllowOrigins: []string{"*"},
+			AllowMethods: []string{"GET", "POST"},
+				AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
+				ExposeHeaders:    []string{"Content-Length", "application/json"},
+			AllowCredentials: true,
+				AllowOriginFunc: func(origin string) bool {
+					return origin == "http://localhost:8090/view"
+				},
+			MaxAge: 24 * time.Hour,
+		}))
+	*/
+
+	// Настройка CORS
+	s.router.Use(CORSMiddleware())
+
 	s.configureRouter()
 
 	return s
+}
+
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
 }
 
 func (s *server) configureRouter() {
@@ -63,7 +84,7 @@ func (s *server) configureRouter() {
 		{
 			userGroup.POST("/signout", s.SignOutUserById)
 			userGroup.POST("/update", s.UpdateUser)
-			userGroup.POST("/update/pass", s.UpdatePassword) // s.AuthMW,
+			userGroup.POST("/update/pass", s.UpdatePassword)
 		}
 
 		usersGroup := apiGroup.Group("/users")
@@ -125,7 +146,6 @@ func (s *server) configureRouter() {
 			teamCompositionGroup.POST("/update", s.UpdateTeamComposition)
 			teamCompositionGroup.GET("/team", s.GetTeamCompositionByTeamId)
 			teamCompositionGroup.GET("/user", s.GetTeamCompositionByUserId)
-
 		}
 
 		teamCompositionsGroup := apiGroup.Group("/teamcompositions", s.AuthMW)
@@ -169,6 +189,7 @@ func (s *server) configureRouter() {
 			roleGroup.POST("/update", s.UpdateRole)
 			roleGroup.POST("/delete", s.DeleteRole)
 			roleGroup.GET("/find/id", s.GetRoleById)
+			roleGroup.GET("/find/idrole", s.GetRoleUser)
 		}
 
 		userRolesGroup := apiGroup.Group("/userRoles")
@@ -236,6 +257,8 @@ func (s *server) SignIn(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	fmt.Println(user.Email, user.Pass)
 
 	user, err = s.store.User().SignInUser(user.Email, user.Pass)
 	if err != nil {
@@ -352,6 +375,69 @@ func (s *server) SetUserTemporaryPassword(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"password": pass})
 }
 
+func createAndSignJWT(user *model.User) (string, error) {
+	// Create a new token object, specifying signing method and the claims
+	// you would like it to contain.
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"userID": user.ID,
+		"ttl":    time.Now().Add(time.Hour * 24 * 100).Unix(),
+	})
+
+	// Sign and get the complete encoded token as a string using the secret
+	return token.SignedString([]byte(hmacSampleSecret))
+}
+
+func setCookie(ctx *gin.Context, token string) {
+	ctx.SetSameSite(http.SameSiteLaxMode)
+	ctx.SetCookie("Auth", token, 3600*24*100, "", "", false, true)
+}
+
+func (s *server) AuthMW(ctx *gin.Context) {
+	// Получение токена из куки
+	tokenStr, err := ctx.Cookie("Auth")
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "No auth token"})
+		ctx.Abort()
+	}
+
+	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		// Don't forget to validate the alg is what you expect:
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+
+		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
+		return []byte(hmacSampleSecret), nil
+	})
+
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Failed to parse JWT"})
+		ctx.Abort()
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "JWT Claims failed"})
+		ctx.Abort()
+	}
+
+	if claims["ttl"].(float64) < float64(time.Now().Unix()) {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "JWT token expired"})
+		ctx.Abort()
+	}
+
+	user, err := s.store.User().UserFromID(claims["userID"].(float64))
+
+	if user.ID == 0 {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Could not find the user!"})
+		ctx.Abort()
+	}
+
+	ctx.Set("user", user)
+
+	ctx.Next()
+}
+
 // Team...
 
 func (s *server) CreateTeam(ctx *gin.Context) {
@@ -452,6 +538,34 @@ func (s *server) UpdateTeam(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, team)
+}
+
+func (s *server) GetTeamComposition(ctx *gin.Context) {
+	type request struct {
+		ID uint `json:"id"`
+	}
+
+	var reqs []request
+	err := ctx.ShouldBindJSON(&reqs)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+
+	var findedTC []model.Team
+	for _, req := range reqs {
+		fmt.Println("ID - ", req.ID)
+
+		tc, err := s.store.Team().TeamComposition(req.ID)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
+			continue
+		} else {
+			findedTC = append(findedTC, tc)
+		}
+	}
+
+	ctx.JSON(http.StatusOK, findedTC)
 }
 
 // Product ...
@@ -880,33 +994,6 @@ func (s *server) LoginHTML(ctx *gin.Context) {
 		"title": "ТД Восток"})
 }
 
-// team
-func (s *server) GetTeamComposition(ctx *gin.Context) {
-	type request struct {
-		ID uint `json:"id"`
-	}
-
-	var reqs []request
-	err := ctx.ShouldBindJSON(&reqs)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
-		return
-	}
-
-	var findedTC []model.Team
-	for _, req := range reqs {
-		tc, err := s.store.Team().TeamComposition(req.ID)
-		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
-			continue
-		} else {
-			findedTC = append(findedTC, tc)
-		}
-	}
-
-	ctx.JSON(http.StatusOK, findedTC)
-}
-
 // AssemblyOrder ...
 func (s *server) GetAssemblyOrderByID(ctx *gin.Context) {
 	type request struct {
@@ -929,69 +1016,25 @@ func (s *server) GetAssemblyOrderByID(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, ao)
 }
 
-func createAndSignJWT(user *model.User) (string, error) {
-	// Create a new token object, specifying signing method and the claims
-	// you would like it to contain.
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"userID": user.ID,
-		"ttl":    time.Now().Add(time.Hour * 24 * 100).Unix(),
-	})
-
-	// Sign and get the complete encoded token as a string using the secret
-	return token.SignedString([]byte(hmacSampleSecret))
-}
-
-func setCookie(ctx *gin.Context, token string) {
-	ctx.SetSameSite(http.SameSiteLaxMode)
-	ctx.SetCookie("Auth", token, 3600*24*100, "", "", false, true)
-}
-
-func (s *server) AuthMW(ctx *gin.Context) {
-	// Получение токена из куки
-	tokenStr, err := ctx.Cookie("Auth")
+func (s *server) CreateAssemblyOrder(ctx *gin.Context) {
+	var ao model.AssemblyOrder
+	err := ctx.ShouldBindJSON(&ao)
 	if err != nil {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "No auth token"})
-		ctx.Abort()
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
-	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
-		// Don't forget to validate the alg is what you expect:
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-		}
-
-		// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
-		return []byte(hmacSampleSecret), nil
-	})
-
+	// Удаляем запись по ID
+	ao, err = s.store.AssemblyOrder().Create(ao)
 	if err != nil {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Failed to parse JWT"})
-		ctx.Abort()
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "JWT Claims failed"})
-		ctx.Abort()
-	}
-
-	if claims["ttl"].(float64) < float64(time.Now().Unix()) {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "JWT token expired"})
-		ctx.Abort()
-	}
-
-	user, err := s.store.User().UserFromID(claims["userID"].(float64))
-
-	if user.ID == 0 {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Could not find the user!"})
-		ctx.Abort()
-	}
-
-	ctx.Set("user", user)
-
-	ctx.Next()
+	ctx.JSON(http.StatusOK, ao)
 }
 
+// Warehiuses
 func (s *server) GetWarehouseAll(ctx *gin.Context) {
 	warehouse, err := s.store.Warehouse().GetAll()
 	if err != nil {
@@ -1088,23 +1131,7 @@ func (s *server) DeleteWarehouseById(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "Запись успешно удалена"})
 }
 
-func (s *server) CreateAssemblyOrder(ctx *gin.Context) {
-	var ao model.AssemblyOrder
-	err := ctx.ShouldBindJSON(&ao)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	// Удаляем запись по ID
-	ao, err = s.store.AssemblyOrder().Create(ao)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, ao)
-}
+//
 
 func (s *server) CreateRole(ctx *gin.Context) {
 	var roles []model.Role
@@ -1318,4 +1345,26 @@ func (s *server) GetUserRoleByUserId(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, tcs)
+}
+
+func (s *server) GetRoleUser(ctx *gin.Context) {
+	type request struct {
+		ID uint `json:"id"`
+	}
+
+	var req request
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var role model.Role
+	err = s.store.Role().UsersByIdRole(req.ID, &role)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, role)
 }

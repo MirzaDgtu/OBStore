@@ -8,4 +8,5 @@ type RoleRepository interface {
 	DeleteByID(uint) error
 	ByID(uint) (model.Role, error)
 	All() ([]model.Role, error)
+	UsersByIdRole(uint, *model.Role) error
 }

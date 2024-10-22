@@ -88,7 +88,7 @@ func (r *UserRepository) ChangePassword(id int, pass string) error {
 }
 
 func (r *UserRepository) GetAll() (users []model.User, err error) {
-	return users, r.store.db.Select("id, firstname, lastname, email, inn").Find(&users).Error
+	return users, r.store.db.Preload("Teams").Preload("Roles").Find(&users).Error
 }
 
 func (r *UserRepository) UpdateToken(id uint, token string) error {

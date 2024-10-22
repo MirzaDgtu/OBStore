@@ -20,6 +20,7 @@ type OrderDetails struct {
 	FinishAt    *time.Time `gorm:"column:finishat" json:"finish_at"`
 	Srok        string     `gorm:"column:srok" json:"Srok"`
 	Partia      string     `gorm:"column:partia" json:"Partia"`
+	Marka       string     `gorm:"column:marka" json:"marka"`
 	Done        bool       `gorm:"column:done" json:"done"`
 }
 

@@ -42,6 +42,8 @@ func (r *TeamRepository) TeamComposition(id uint) (tc model.Team, err error) {
 
 	for i, _ := range tc.Users {
 		tc.Users[i].Pass = ""
+		tc.Users[i].Token = ""
+		tc.Users[i].RefreshToken = ""
 	}
 
 	return tc, err
