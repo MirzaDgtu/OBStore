@@ -71,4 +71,6 @@ func dbMigrate(db *gorm.DB) {
 	db.AutoMigrate(&model.AssemblyOrder{}, &model.AssemblyOrderDetails{})
 	db.AutoMigrate(&model.Order{}, &model.OrderDetails{})
 	db.AutoMigrate(&model.Warehouse{})
+	db.AutoMigrate(&model.Role{})
+	//	db.AutoMigrate(&model.UserRole{})
 }

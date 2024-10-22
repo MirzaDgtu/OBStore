@@ -7,7 +7,7 @@ type Role struct {
 	NameRole    string `json:"name_role"`
 	Description string `json:"description" validation:"required"`
 	Priority    int    `json:"priority"`
-	User        []User `gorm:"many2many:user_roles" json:"users"`
+	User        []User `gorm:"many2many:user_roles;" json:"users"`
 }
 
 func (Role) TableName() string {

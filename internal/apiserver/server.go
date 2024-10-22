@@ -159,6 +159,33 @@ func (s *server) configureRouter() {
 			warehouseGroup.POST("/delete", s.DeleteWarehouseById)
 		}
 
+		rolesGroup := apiGroup.Group("/roles")
+		{
+			rolesGroup.POST("", s.CreateRole)
+			rolesGroup.GET("", s.GetAllRoles)
+		}
+		roleGroup := apiGroup.Group("/role")
+		{
+			roleGroup.POST("/update", s.UpdateRole)
+			roleGroup.POST("/delete", s.DeleteRole)
+			roleGroup.GET("/find/id", s.GetRoleById)
+		}
+
+		userRolesGroup := apiGroup.Group("/userRoles")
+		{
+			userRolesGroup.POST("", s.CreateUserRole)
+			userRolesGroup.GET("", s.GetAllUserRole)
+			userRolesGroup.GET("/find/userId", s.GetUserRoleByUserId)
+			userRolesGroup.GET("/find/roleId", s.GetUserRoleByRoleId)
+		}
+		userRoleGroup := apiGroup.Group("/userRole")
+		{
+			//userRoleGroup.POST("/delete", s.DeleteUserRole)
+			userRoleGroup.POST("/update", s.UpdateUserRole)
+			userRoleGroup.GET("/find/id", s.GetUserRoleById)
+
+		}
+
 	}
 
 	/*
@@ -1077,4 +1104,218 @@ func (s *server) CreateAssemblyOrder(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, ao)
+}
+
+func (s *server) CreateRole(ctx *gin.Context) {
+	var roles []model.Role
+
+	err := ctx.ShouldBindJSON(&roles)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var createdRoles []model.Role
+	for _, role := range roles {
+		role, err = s.store.Role().Create(role)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			continue
+		} else {
+			createdRoles = append(createdRoles, role)
+		}
+	}
+	ctx.JSON(http.StatusCreated, createdRoles)
+}
+
+func (s *server) GetAllRoles(ctx *gin.Context) {
+	roles, err := s.store.Role().All()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, roles)
+}
+
+func (s *server) GetRoleById(ctx *gin.Context) {
+	type request struct {
+		Id uint `json:"id" validate:"required"`
+	}
+
+	var reqs []request
+	err := ctx.ShouldBindJSON(&reqs)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var findedRoles []model.Role
+
+	for _, req := range reqs {
+		role, err := s.store.Role().ByID(req.Id)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			continue
+		} else {
+			findedRoles = append(findedRoles, role)
+		}
+	}
+
+	ctx.JSON(http.StatusOK, findedRoles)
+}
+
+func (s *server) DeleteRole(ctx *gin.Context) {
+	type request struct {
+		Id uint `json:"id" validate:"required"`
+	}
+
+	var reqs []request
+	err := ctx.ShouldBindJSON(&reqs)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	for _, req := range reqs {
+		err := s.store.Role().DeleteByID(req.Id)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			continue
+		}
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Запрос на удаление успешно выполнен"})
+}
+
+func (s *server) UpdateRole(ctx *gin.Context) {
+	var role model.Role
+	err := ctx.ShouldBindJSON(&role)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	role, err = s.store.Role().Update(role)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, role)
+}
+
+// UserRole ...
+
+func (s *server) CreateUserRole(ctx *gin.Context) {
+	var reqs []model.UserRole
+
+	err := ctx.ShouldBindJSON(&reqs)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var createdUR []model.UserRole
+	for _, req := range reqs {
+		ur, err := s.store.UserRole().Create(req)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			continue
+		} else {
+			createdUR = append(createdUR, ur)
+		}
+	}
+
+	ctx.JSON(http.StatusCreated, createdUR)
+}
+
+func (s *server) GetUserRoleById(ctx *gin.Context) {
+	type request struct {
+		ID int `json:"id"`
+	}
+
+	var req request
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ur, err := s.store.UserRole().ByID(uint(req.ID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, ur)
+}
+
+func (s *server) UpdateUserRole(ctx *gin.Context) {
+	var ur model.UserRole
+	err := ctx.ShouldBindJSON(&ur)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ur, err = s.store.UserRole().Update(ur)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, ur)
+}
+
+func (s *server) GetUserRoleByRoleId(ctx *gin.Context) {
+	type request struct {
+		RoleID uint `json:"role_id"`
+	}
+
+	var req request
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ur, err := s.store.UserRole().ByRoleID(req.RoleID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, ur)
+}
+
+func (s *server) GetAllUserRole(ctx *gin.Context) {
+	ur, err := s.store.UserRole().All()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, ur)
+}
+
+func (s *server) GetUserRoleByUserId(ctx *gin.Context) {
+	type request struct {
+		UserID uint `json:"user_id"`
+	}
+
+	var req request
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	tcs, err := s.store.UserRole().ByUserID(req.UserID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, tcs)
 }

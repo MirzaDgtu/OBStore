@@ -56,18 +56,49 @@
 [GIN-debug] GET    /api/v1/warehouse/find/id --> obstore/internal/apiserver.(*server).GetWarehouseById-fm (6 handlers)
 [GIN-debug] POST   /api/v1/warehouse/update  --> obstore/internal/apiserver.(*server).UpdateWarehouse-fm (6 handlers)
 [GIN-debug] POST   /api/v1/warehouse/delete  --> obstore/internal/apiserver.(*server).DeleteWarehouseById-fm (6 handlers)
+[GIN-debug] POST   /api/v1/roles             --> obstore/internal/apiserver.(*server).CreateRole-fm (5 handlers)
+[GIN-debug] GET    /api/v1/roles             --> obstore/internal/apiserver.(*server).GetAllRoles-fm (5 handlers)
+[GIN-debug] POST   /api/v1/role/update       --> obstore/internal/apiserver.(*server).UpdateRole-fm (5 handlers)
+[GIN-debug] POST   /api/v1/role/delete       --> obstore/internal/apiserver.(*server).DeleteRole-fm (5 handlers)
+[GIN-debug] GET    /api/v1/role/find/id      --> obstore/internal/apiserver.(*server).GetRoleById-fm (5 handlers)
+[GIN-debug] POST   /api/v1/userRoles         --> obstore/internal/apiserver.(*server).CreateUserRole-fm (5 handlers)
+[GIN-debug] GET    /api/v1/userRoles         --> obstore/internal/apiserver.(*server).GetAllUserRole-fm (5 handlers)
+[GIN-debug] GET    /api/v1/userRoles/find/userId --> obstore/internal/apiserver.(*server).GetUserRoleByUserId-fm (5 handlers)
+[GIN-debug] GET    /api/v1/userRoles/find/roleId --> obstore/internal/apiserver.(*server).GetUserRoleByRoleId-fm (5 handlers)
+[GIN-debug] POST   /api/v1/userRole/update   --> obstore/internal/apiserver.(*server).UpdateUserRole-fm (5 handlers)
+[GIN-debug] GET    /api/v1/userRole/find/id  --> obstore/internal/apiserver.(*server).GetUserRoleById-fm (5 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-[GIN] 2024/10/22 - 01:05:41 | 200 |     59.8033ms |             ::1 | POST     "/api/v1/users/password/restore"
-[GIN] 2024/10/22 - 01:05:41 | 200 |     60.8025ms |             ::1 | POST     "/api/v1/users/password/restore"
-[GIN] 2024/10/22 - 01:05:52 | 500 |     55.7206ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/22 - 01:05:52 | 500 |     55.7206ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/22 - 01:05:56 | 500 |     54.6038ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/22 - 01:05:56 | 500 |     54.6038ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/22 - 01:05:57 | 500 |     54.7964ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/22 - 01:05:57 | 500 |     54.7964ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/22 - 01:05:58 | 500 |     54.9863ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/22 - 01:05:58 | 500 |     54.9863ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/22 - 01:06:21 | 200 |     61.7968ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/22 - 01:06:21 | 200 |     61.7968ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:15:39 | 200 |     94.5027ms |             ::1 | POST     "/api/v1/users/password/restore"
+[GIN] 2024/10/22 - 07:15:39 | 200 |     94.5027ms |             ::1 | POST     "/api/v1/users/password/restore"
+[GIN] 2024/10/22 - 07:16:06 | 500 |     74.1727ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:16:06 | 500 |     74.1727ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:16:13 | 500 |     82.5884ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:16:13 | 500 |     82.5884ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:16:21 | 200 |     88.3922ms |             ::1 | POST     "/api/v1/users/password/restore"
+[GIN] 2024/10/22 - 07:16:21 | 200 |     88.5196ms |             ::1 | POST     "/api/v1/users/password/restore"
+[GIN] 2024/10/22 - 07:16:34 | 500 |      75.131ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:16:34 | 500 |      75.131ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:16:42 | 500 |     70.4774ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:16:42 | 500 |     70.4774ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:17:23 | 200 |    109.2498ms |             ::1 | POST     "/api/v1/users/password/restore"
+[GIN] 2024/10/22 - 07:17:23 | 200 |    109.2498ms |             ::1 | POST     "/api/v1/users/password/restore"
+[GIN] 2024/10/22 - 07:17:43 | 500 |     77.3371ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:17:43 | 500 |     78.3338ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:17:49 | 200 |    133.2433ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:17:49 | 200 |    133.7754ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:18:13 | 200 |     94.4705ms |             ::1 | POST     "/api/v1/user/update/pass"
+[GIN] 2024/10/22 - 07:18:13 | 200 |     94.4705ms |             ::1 | POST     "/api/v1/user/update/pass"
+[GIN] 2024/10/22 - 07:18:46 | 200 |    116.5989ms |             ::1 | POST     "/api/v1/user/update/pass"
+[GIN] 2024/10/22 - 07:18:46 | 200 |     117.105ms |             ::1 | POST     "/api/v1/user/update/pass"
+[GIN] 2024/10/22 - 07:18:52 | 500 |     89.7674ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:18:52 | 500 |     89.7674ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:19:24 | 200 |     97.5939ms |             ::1 | POST     "/api/v1/users/password/restore"
+[GIN] 2024/10/22 - 07:19:24 | 200 |     97.5939ms |             ::1 | POST     "/api/v1/users/password/restore"
+[GIN] 2024/10/22 - 07:19:29 | 200 |    136.8401ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:19:29 | 200 |    137.3515ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:20:25 | 200 |    106.4332ms |             ::1 | POST     "/api/v1/user/update/pass"
+[GIN] 2024/10/22 - 07:20:25 | 200 |    106.4332ms |             ::1 | POST     "/api/v1/user/update/pass"
+[GIN] 2024/10/22 - 07:20:42 | 200 |    119.9354ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/22 - 07:20:42 | 200 |    120.4405ms |             ::1 | POST     "/api/v1/users/signin"
