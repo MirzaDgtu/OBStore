@@ -7,11 +7,11 @@ import (
 type OrderRepository interface {
 	Create(model.Order) (model.Order, error)
 	Update(model.Order) (model.Order, error)
-	GetAll() ([]model.Order, error)
-	GetById(int) (model.Order, error)
-	GetByOrderUID(int) (model.Order, error)
-	GetByFolioNum(int) (model.Order, error)
-	GetByDateRange(string, string) ([]model.Order, error)
-	GetByDriver(string) ([]model.Order, error)
-	GetByAgent(string) ([]model.Order, error)
+	All() ([]model.Order, error)
+	ById(int) (model.Order, error)
+	ByOrderUID(int) (model.Order, error)
+	ByFolioNum(int) (model.Order, error)
+	ByDateRange(string, string) ([]model.Order, error)
+	ByDriver(string) ([]model.Order, error)
+	ByAgent(string) ([]model.Order, error)
 }

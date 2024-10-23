@@ -28,11 +28,11 @@ func (r *WarehouseRepository) Update(u model.Warehouse) (warehouse model.Warehou
 	return updatedWarehouse, nil
 }
 
-func (r *WarehouseRepository) GetAll() (warehouses []model.Warehouse, err error) {
+func (r *WarehouseRepository) All() (warehouses []model.Warehouse, err error) {
 	return warehouses, r.store.db.Find(&warehouses).Error
 }
 
-func (r *WarehouseRepository) GetByID(id uint) (warehouse model.Warehouse, err error) {
+func (r *WarehouseRepository) ByID(id uint) (warehouse model.Warehouse, err error) {
 	return warehouse, r.store.db.First(&warehouse, id).Error
 }
 

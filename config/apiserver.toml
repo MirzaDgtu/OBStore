@@ -1,3 +1,5 @@
 bind_addr = ":8090"
 log_level = "debug"
-database_url = "pmp:pmp1226@(192.168.31.44:3306)/ordersbuild?parseTime=true"
+database_url = "pmp:pmp1226@(nor.ru:3306)/ordersbuild?parseTime=true"
+# 192.168.31.44
+# localhost

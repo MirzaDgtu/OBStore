@@ -81,13 +81,12 @@ func (r *UserRepository) ChangePassword(id int, pass string) error {
 		return err
 	}
 
-	fmt.Println(pass)
-
 	var user model.User
-	return r.store.db.Model(&user).Where("id=?", id).Update("pass", pass).Error
+	return r.store.db.Model(&user).Where("id=?", id).Updates(map[string]interface{}{"pass": pass,
+		"restore": false}).Error
 }
 
-func (r *UserRepository) GetAll() (users []model.User, err error) {
+func (r *UserRepository) All() (users []model.User, err error) {
 	return users, r.store.db.Preload("Teams").Preload("Roles").Find(&users).Error
 }
 
@@ -143,5 +142,6 @@ func (r *UserRepository) SetTemporaryPassword(email string) (string, error) {
 
 	hPass := pass
 	hashPassword(&hPass)
-	return pass, r.store.db.Model(&model.User{}).Where("id=?", user.ID).Update("pass", hPass).Error
+	return pass, r.store.db.Model(&model.User{}).Where("id=?", user.ID).Updates(map[string]interface{}{"pass": hPass,
+		"restore": true}).Error
 }

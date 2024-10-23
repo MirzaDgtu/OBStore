@@ -28,5 +28,15 @@ func (r *RoleRepository) All() (roles []model.Role, err error) {
 }
 
 func (r *RoleRepository) UsersByIdRole(id uint, roles *model.Role) error {
-	return r.store.db.Where("id = ?", id).Preload("Users").First(roles).Error
+	err := r.store.db.Where("id = ?", id).Preload("Users").First(roles).Error
+	if err != nil {
+		return err
+	}
+	for i := range roles.Users {
+		roles.Users[i].Pass = ""
+		roles.Users[i].Token = ""
+		roles.Users[i].RefreshToken = ""
+	}
+
+	return nil
 }

@@ -10,7 +10,7 @@ type UserRepository interface {
 	SignInUser(username, password string) (model.User, error)
 	SignOutUserById(int) error
 	ChangePassword(int, string) error
-	GetAll() ([]model.User, error)
+	All() ([]model.User, error)
 	UpdateToken(uint, string) error
 	UserFromID(float64) (model.User, error)
 	SetTemporaryPassword(string) (string, error)

@@ -8,6 +8,7 @@ import (
 	"obstore/internal/store"
 	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -32,23 +33,22 @@ func newServer(store store.Store) *server {
 		store:  store,
 	}
 
-	s.router.Use(gin.Logger())
-	/*
-		s.router.Use(cors.New(cors.Config{
-			AllowOrigins: []string{"*"},
-			AllowMethods: []string{"GET", "POST"},
-				AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
-				ExposeHeaders:    []string{"Content-Length", "application/json"},
-			AllowCredentials: true,
-				AllowOriginFunc: func(origin string) bool {
-					return origin == "http://localhost:8090/view"
-				},
-			MaxAge: 24 * time.Hour,
-		}))
-	*/
+	s.router.Use()
+
+	s.router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"}, // ваш домен React
+		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length", "application/json"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "http://localhost:3000" // замените на ваш домен React
+		},
+		MaxAge: 24 * time.Hour,
+	}))
 
 	// Настройка CORS
-	s.router.Use(CORSMiddleware())
+	//s.router.Use(CORSMiddleware())
 
 	s.configureRouter()
 
@@ -251,16 +251,19 @@ func (s *server) CreateUser(ctx *gin.Context) {
 }
 
 func (s *server) SignIn(ctx *gin.Context) {
-	var user model.User
-	err := ctx.BindJSON(&user)
+	type request struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	var req request
+	err := ctx.BindJSON(&req)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	fmt.Println(user.Email, user.Pass)
-
-	user, err = s.store.User().SignInUser(user.Email, user.Pass)
+	user, err := s.store.User().SignInUser(req.Email, req.Password)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": errIncorrectEmailOrPassword.Error()})
 		return
@@ -345,7 +348,7 @@ func (s *server) UpdatePassword(ctx *gin.Context) {
 }
 
 func (s *server) GetUserAll(ctx *gin.Context) {
-	users, err := s.store.User().GetAll()
+	users, err := s.store.User().All()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -464,7 +467,7 @@ func (s *server) CreateTeam(ctx *gin.Context) {
 }
 
 func (s *server) GetTeamAll(ctx *gin.Context) {
-	teams, err := s.store.Team().GetAll()
+	teams, err := s.store.Team().All()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -488,7 +491,7 @@ func (s *server) GetTeamById(ctx *gin.Context) {
 	var findedTeams []model.Team
 
 	for _, req := range reqs {
-		team, err := s.store.Team().GetById(req.Id)
+		team, err := s.store.Team().ById(req.Id)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			continue
@@ -594,7 +597,7 @@ func (s *server) CreateProduct(ctx *gin.Context) {
 }
 
 func (s *server) GetProductsAll(ctx *gin.Context) {
-	products, err := s.store.Product().GetAll()
+	products, err := s.store.Product().All()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -617,7 +620,7 @@ func (s *server) GetProductByArticle(ctx *gin.Context) {
 
 	var findedProduct []model.Product
 	for _, req := range reqs {
-		product, err := s.store.Product().GetByArticle(req.Article)
+		product, err := s.store.Product().ByArticle(req.Article)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -638,7 +641,7 @@ func (s *server) GetProductByStrikeCode(ctx *gin.Context) {
 		return
 	}
 
-	findedProduct, err := s.store.Product().GetByStrikeCode(product.StrikeCode)
+	findedProduct, err := s.store.Product().ByStrikeCode(product.StrikeCode)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -659,7 +662,7 @@ func (s *server) GetProductByName(ctx *gin.Context) {
 		return
 	}
 
-	findedProduct, err := s.store.Product().GetByName(req.NameArtic)
+	findedProduct, err := s.store.Product().ByName(req.NameArtic)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -735,7 +738,7 @@ func (s *server) GetOrderById(ctx *gin.Context) {
 	var orders []model.Order
 
 	for _, req := range reqs {
-		order, err := s.store.Order().GetById(req.Id)
+		order, err := s.store.Order().ById(req.Id)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			continue
@@ -761,7 +764,7 @@ func (s *server) GetOrderByUID(ctx *gin.Context) {
 	var orders []model.Order
 
 	for _, req := range reqs {
-		order, err := s.store.Order().GetByOrderUID(req.OrderUID)
+		order, err := s.store.Order().ByOrderUID(req.OrderUID)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			continue
@@ -787,7 +790,7 @@ func (s *server) GetOrderByFolioNum(ctx *gin.Context) {
 	var orders []model.Order
 
 	for _, req := range reqs {
-		order, err := s.store.Order().GetByFolioNum(req.FolioNum)
+		order, err := s.store.Order().ByFolioNum(req.FolioNum)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			continue
@@ -800,7 +803,7 @@ func (s *server) GetOrderByFolioNum(ctx *gin.Context) {
 }
 
 func (s *server) GetOrdersAll(ctx *gin.Context) {
-	orders, err := s.store.Order().GetAll()
+	orders, err := s.store.Order().All()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -821,7 +824,7 @@ func (s *server) GetOrdersByDriver(ctx *gin.Context) {
 		return
 	}
 
-	findedOrders, err := s.store.Order().GetByDriver(req.Driver)
+	findedOrders, err := s.store.Order().ByDriver(req.Driver)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -842,7 +845,7 @@ func (s *server) GetOrdersByAgent(ctx *gin.Context) {
 		return
 	}
 
-	findedOrders, err := s.store.Order().GetByAgent(req.Agent)
+	findedOrders, err := s.store.Order().ByAgent(req.Agent)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -864,7 +867,7 @@ func (s *server) GetOrdersByDateRange(ctx *gin.Context) {
 		return
 	}
 
-	findedOrders, err := s.store.Order().GetByDateRange(req.DtStart, req.DtFinish)
+	findedOrders, err := s.store.Order().ByDateRange(req.DtStart, req.DtFinish)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -910,7 +913,7 @@ func (s *server) GetTeamCompositionById(ctx *gin.Context) {
 		return
 	}
 
-	tsc, err := s.store.TeamComposition().GetByID(uint(req.ID))
+	tsc, err := s.store.TeamComposition().ByID(uint(req.ID))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -948,7 +951,7 @@ func (s *server) GetTeamCompositionByTeamId(ctx *gin.Context) {
 		return
 	}
 
-	ts, err := s.store.TeamComposition().GetByTeamId(req.ID)
+	ts, err := s.store.TeamComposition().ByTeamId(req.ID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -958,7 +961,7 @@ func (s *server) GetTeamCompositionByTeamId(ctx *gin.Context) {
 }
 
 func (s *server) GetTeamCompositionAll(ctx *gin.Context) {
-	tcs, err := s.store.TeamComposition().GetAll()
+	tcs, err := s.store.TeamComposition().All()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
@@ -979,7 +982,7 @@ func (s *server) GetTeamCompositionByUserId(ctx *gin.Context) {
 		return
 	}
 
-	tcs, err := s.store.TeamComposition().GetByUserId(req.UserID)
+	tcs, err := s.store.TeamComposition().ByUserId(req.UserID)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -1007,7 +1010,7 @@ func (s *server) GetAssemblyOrderByID(ctx *gin.Context) {
 		return
 	}
 
-	ao, err := s.store.AssemblyOrder().GetByID(req.ID)
+	ao, err := s.store.AssemblyOrder().ByID(req.ID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
@@ -1036,7 +1039,7 @@ func (s *server) CreateAssemblyOrder(ctx *gin.Context) {
 
 // Warehiuses
 func (s *server) GetWarehouseAll(ctx *gin.Context) {
-	warehouse, err := s.store.Warehouse().GetAll()
+	warehouse, err := s.store.Warehouse().All()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -1059,7 +1062,7 @@ func (s *server) GetWarehouseById(ctx *gin.Context) {
 
 	fmt.Println(req.ID)
 
-	wh, err := s.store.Warehouse().GetByID(req.ID)
+	wh, err := s.store.Warehouse().ByID(req.ID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -1338,13 +1341,13 @@ func (s *server) GetUserRoleByUserId(ctx *gin.Context) {
 		return
 	}
 
-	tcs, err := s.store.UserRole().ByUserID(req.UserID)
+	ur, err := s.store.UserRole().ByUserID(req.UserID)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, tcs)
+	ctx.JSON(http.StatusOK, ur)
 }
 
 func (s *server) GetRoleUser(ctx *gin.Context) {

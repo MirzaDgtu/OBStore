@@ -14,6 +14,7 @@ type User struct {
 	Inn          string `gorm:"column:inn" json:"inn"`
 	Token        string `gorm:"column:token" json:"token"`
 	RefreshToken string `gorm:"column:refresh_token" json:"refresh_token"`
+	Restore      bool   `gorm:"column:restore" json:"restore"`
 	Teams        []Team `gorm:"many2many:teamcompositions;" json:"teams"`
 	Roles        []Role `gorm:"many2many:user_roles;" json:"user_roles"`
 }

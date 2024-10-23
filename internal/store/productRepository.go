@@ -4,9 +4,9 @@ import "obstore/internal/model"
 
 type ProductRepository interface {
 	Create(model.Product) (model.Product, error)
-	GetByArticle(string) (model.Product, error)
-	GetByStrikeCode(string) ([]model.Product, error)
-	GetByName(string) ([]model.Product, error)
-	GetAll() ([]model.Product, error)
+	ByArticle(string) (model.Product, error)
+	ByStrikeCode(string) ([]model.Product, error)
+	ByName(string) ([]model.Product, error)
+	All() ([]model.Product, error)
 	UpdateStrikeCode(int, string) (model.Product, error)
 }
