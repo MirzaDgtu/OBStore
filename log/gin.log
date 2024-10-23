@@ -11,10 +11,10 @@
 [GIN-debug] GET    /favicon.png              --> obstore/internal/apiserver.(*server).configureRouter.(*RouterGroup).StaticFile.func1 (4 handlers)
 [GIN-debug] HEAD   /favicon.png              --> obstore/internal/apiserver.(*server).configureRouter.(*RouterGroup).StaticFile.func1 (4 handlers)
 [GIN-debug] Loaded HTML Templates (4): 
-	- 
 	- loginStyle.css
 	- loginScript.js
 	- login.html
+	- 
 
 [GIN-debug] POST   /api/v1/user/signout      --> obstore/internal/apiserver.(*server).SignOutUserById-fm (5 handlers)
 [GIN-debug] POST   /api/v1/user/update       --> obstore/internal/apiserver.(*server).UpdateUser-fm (5 handlers)
@@ -71,47 +71,10 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-[GIN] 2024/10/23 - 22:37:11 | 200 |     68.1793ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/23 - 22:37:11 | 204 |            0s |             ::1 | OPTIONS  "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:37:11 | 204 |            0s |             ::1 | OPTIONS  "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:37:11 | 204 |            0s |             ::1 | OPTIONS  "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:37:11 | 204 |            0s |             ::1 | OPTIONS  "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:37:11 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:37:11 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:37:11 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:37:11 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:37:58 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:37:58 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN-debug] [WARNING] Headers were already written. Wanted to override status code 401 with 500
-[GIN] 2024/10/23 - 22:38:07 | 401 |      5.9282ms |             ::1 | POST     "/api/v1/user/signout"
-[GIN] 2024/10/23 - 22:38:08 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:38:08 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:38:08 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:38:08 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:38:14 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:38:14 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:38:14 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:38:14 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:40:57 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:40:57 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:43:04 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:43:04 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:43:04 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:43:04 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:47:52 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:47:52 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:47:59 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:47:59 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:47:59 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:47:59 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:48:49 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:48:49 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:48:51 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:48:51 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:48:51 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:48:51 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:48:59 | 200 |     64.4704ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/23 - 22:48:59 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:48:59 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/23 - 22:48:59 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/23 - 22:48:59 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
+[GIN] 2024/10/24 - 00:49:16 | 500 |     58.4872ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/24 - 00:49:23 | 200 |     60.4043ms |             ::1 | POST     "/api/v1/users/password/restore"
+[GIN] 2024/10/24 - 00:49:29 | 500 |     55.6948ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/24 - 00:49:35 | 200 |     59.8897ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/24 - 00:50:08 | 200 |     69.2605ms |             ::1 | POST     "/api/v1/user/update/pass"
+[GIN] 2024/10/24 - 00:50:18 | 202 |      2.9131ms |             ::1 | POST     "/api/v1/user/signout"
+[GIN] 2024/10/24 - 00:50:21 | 200 |     62.5962ms |             ::1 | POST     "/api/v1/users/signin"
