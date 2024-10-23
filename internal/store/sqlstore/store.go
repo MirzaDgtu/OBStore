@@ -134,7 +134,7 @@ func (s *Store) UserRole() store.UserRoleRepository {
 	return s.userRoleRepository
 }
 
-func (s *Store) DashBoard() store.DashboardRepository {
+func (s *Store) Dashboard() store.DashboardRepository {
 	if s.dashboardRepository != nil {
 		return s.dashboardRepository
 	}
