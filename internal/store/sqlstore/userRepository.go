@@ -145,3 +145,7 @@ func (r *UserRepository) SetTemporaryPassword(email string) (string, error) {
 	return pass, r.store.db.Model(&model.User{}).Where("id=?", user.ID).Updates(map[string]interface{}{"pass": hPass,
 		"restore": true}).Error
 }
+
+func (r *UserRepository) BlockedByID(id uint, isBlocked bool) error {
+	return r.store.db.Model(&model.User{}).Update("blocked", isBlocked).Error
+}

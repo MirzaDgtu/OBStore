@@ -11,10 +11,10 @@
 [GIN-debug] GET    /favicon.png              --> obstore/internal/apiserver.(*server).configureRouter.(*RouterGroup).StaticFile.func1 (4 handlers)
 [GIN-debug] HEAD   /favicon.png              --> obstore/internal/apiserver.(*server).configureRouter.(*RouterGroup).StaticFile.func1 (4 handlers)
 [GIN-debug] Loaded HTML Templates (4): 
-	- 
 	- loginStyle.css
 	- loginScript.js
 	- login.html
+	- 
 
 [GIN-debug] POST   /api/v1/user/signout      --> obstore/internal/apiserver.(*server).SignOutUserById-fm (5 handlers)
 [GIN-debug] POST   /api/v1/user/update       --> obstore/internal/apiserver.(*server).UpdateUser-fm (5 handlers)
@@ -23,6 +23,7 @@
 [GIN-debug] POST   /api/v1/users/signin      --> obstore/internal/apiserver.(*server).SignIn-fm (4 handlers)
 [GIN-debug] GET    /api/v1/users             --> obstore/internal/apiserver.(*server).GetUserAll-fm (4 handlers)
 [GIN-debug] POST   /api/v1/users/password/restore --> obstore/internal/apiserver.(*server).SetUserTemporaryPassword-fm (4 handlers)
+[GIN-debug] POST   /api/v1/users/users/:id/block/*blocked --> obstore/internal/apiserver.(*server).BlockedUserByID-fm (4 handlers)
 [GIN-debug] GET    /api/v1/team              --> obstore/internal/apiserver.(*server).GetTeamById-fm (5 handlers)
 [GIN-debug] POST   /api/v1/team/delete       --> obstore/internal/apiserver.(*server).DeteleTeamById-fm (5 handlers)
 [GIN-debug] POST   /api/v1/team/update       --> obstore/internal/apiserver.(*server).UpdateTeam-fm (5 handlers)
@@ -71,82 +72,10 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-[GIN] 2024/10/24 - 14:07:18 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:07:18 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:07:18 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:07:18 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:07:18 | 200 |     45.0791ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:07:18 | 200 |     35.1689ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:08:18 | 200 |     42.4442ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:12:52 | 200 |     37.0077ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:12:54 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:12:54 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:12:54 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:12:54 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:12:54 | 200 |     37.2484ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:12:54 | 200 |       47.61ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:13:04 | 200 |      69.641ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:13:05 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:13:05 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:13:05 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:13:05 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:13:05 | 200 |      41.455ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:13:05 | 200 |     41.8073ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:17:33 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:17:33 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:17:33 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:17:33 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:17:34 | 200 |     72.3107ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:17:34 | 200 |     54.0332ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:18:46 | 200 |     148.829ms |     172.16.4.23 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/24 - 14:18:47 | 200 |     24.1462ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/24 - 14:22:22 | 200 |    125.9175ms |     172.16.4.23 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/24 - 14:22:22 | 200 |     25.1917ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/24 - 14:23:03 | 200 |    138.5433ms |     172.16.4.23 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/24 - 14:23:03 | 200 |     22.6059ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/24 - 14:32:37 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:32:37 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:32:37 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:32:37 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:32:37 | 200 |     52.2179ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:32:37 | 200 |     43.9103ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:33:52 | 200 |     39.0951ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:38:05 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:38:05 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:38:08 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:38:08 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:38:08 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:38:08 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:38:08 | 200 |     47.6384ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:38:08 | 200 |     53.6541ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:38:43 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:38:43 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:38:46 | 404 |            0s |             ::1 | GET      "/api/v1/employees"
-[GIN] 2024/10/24 - 14:38:46 | 404 |            0s |             ::1 | GET      "/api/v1/employees"
-[GIN] 2024/10/24 - 14:39:11 | 200 |     42.2244ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:39:20 | 204 |            0s |             ::1 | OPTIONS  "/api/v1/employees/3/block"
-[GIN] 2024/10/24 - 14:39:20 | 404 |            0s |             ::1 | POST     "/api/v1/employees/3/block"
-[GIN] 2024/10/24 - 14:39:20 | 404 |            0s |             ::1 | POST     "/api/v1/employees/3/block"
-[GIN] 2024/10/24 - 14:39:42 | 200 |     57.9279ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:43:39 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:43:39 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:43:39 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:43:39 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:43:41 | 200 |     38.8288ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:43:42 | 200 |     62.1268ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:47:21 | 200 |     55.3005ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:47:21 | 200 |     45.8939ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:47:41 | 200 |     37.3747ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:47:41 | 200 |     46.1179ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:50:05 | 204 |            0s |             ::1 | OPTIONS  "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:50:05 | 204 |            0s |             ::1 | OPTIONS  "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:50:05 | 204 |            0s |             ::1 | OPTIONS  "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:50:05 | 204 |            0s |             ::1 | OPTIONS  "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:50:05 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:50:05 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:50:05 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/24 - 14:50:05 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/24 - 14:50:08 | 404 |            0s |             ::1 | GET      "/api/v1/user/profile"
-[GIN] 2024/10/24 - 14:50:08 | 404 |            0s |             ::1 | GET      "/api/v1/user/profile"
-[GIN] 2024/10/24 - 14:50:18 | 200 |     47.5839ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/24 - 14:50:18 | 200 |     42.2125ms |             ::1 | GET      "/api/v1/users"
+[GIN] 2024/10/24 - 22:47:46 | 404 |            0s |             ::1 | POST     "/api/v1/users/3/block"
+[GIN] 2024/10/24 - 22:47:54 | 200 |     62.8832ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/24 - 22:47:59 | 404 |            0s |             ::1 | POST     "/api/v1/users/3/block"
+[GIN] 2024/10/24 - 22:48:07 | 404 |            0s |             ::1 | POST     "/api/v1/users/3/block?blocked=true"
+[GIN] 2024/10/24 - 22:48:13 | 404 |            0s |             ::1 | POST     "/api/v1/users/3/block/?blocked=true"
+[GIN] 2024/10/24 - 22:48:18 | 404 |            0s |             ::1 | POST     "/api/v1/users/3/block/blocked=true"
+[GIN] 2024/10/24 - 22:49:08 | 404 |            0s |             ::1 | POST     "/api/v1/users/3/block"

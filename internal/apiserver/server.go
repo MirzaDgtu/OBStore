@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"obstore/internal/model"
 	"obstore/internal/store"
+	"strconv"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -93,6 +94,7 @@ func (s *server) configureRouter() {
 			usersGroup.POST("/signin", s.SignIn)
 			usersGroup.GET("", s.GetUserAll)
 			usersGroup.POST("/password/restore", s.SetUserTemporaryPassword)
+			usersGroup.POST("/users/:id/block/*blocked", s.BlockedUserByID)
 		}
 
 		teamGroup := apiGroup.Group("/team", s.AuthMW)
@@ -327,8 +329,8 @@ func (s *server) UpdateUser(ctx *gin.Context) {
 
 func (s *server) UpdatePassword(ctx *gin.Context) {
 	type request struct {
-		Id   int    `json:"id" validate:"required"`
-		Pass string `json:"pass" validate:"required"`
+		ID       int    `json:"id" validate:"required"`
+		Password string `json:"password" validate:"required"`
 	}
 
 	var req request
@@ -338,7 +340,7 @@ func (s *server) UpdatePassword(ctx *gin.Context) {
 		return
 	}
 
-	err = s.store.User().ChangePassword(req.Id, req.Pass)
+	err = s.store.User().ChangePassword(req.ID, req.Password)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -439,6 +441,37 @@ func (s *server) AuthMW(ctx *gin.Context) {
 	ctx.Set("user", user)
 
 	ctx.Next()
+}
+
+func (s *server) BlockedUserByID(ctx *gin.Context) {
+	pID := ctx.Param("id")
+	pBlocked := ctx.Param("bloked")
+
+	ID, err := strconv.Atoi(pID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+
+	Blocked, err := strconv.ParseBool(pBlocked)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+		return
+	}
+
+	err = s.store.User().BlockedByID(uint(ID), Blocked)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+
+	var msg string
+	if Blocked == true {
+		msg = " заблокирован"
+	} else {
+		msg = " разблокирован"
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "Пользователь успешно " + msg})
 }
 
 // Team...
