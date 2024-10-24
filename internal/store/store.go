@@ -10,4 +10,5 @@ type Store interface {
 	Warehouse() WarehouseRepository
 	Role() RoleRepository
 	UserRole() UserRoleRepository
+	Dashboard() DashboardRepository
 }
