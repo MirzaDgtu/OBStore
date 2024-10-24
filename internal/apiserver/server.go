@@ -91,7 +91,7 @@ func (s *server) configureRouter() {
 		{
 			usersGroup.POST("", s.CreateUser)
 			usersGroup.POST("/signin", s.SignIn)
-			usersGroup.GET("", s.AuthMW, s.GetUserAll)
+			usersGroup.GET("", s.GetUserAll)
 			usersGroup.POST("/password/restore", s.SetUserTemporaryPassword)
 		}
 

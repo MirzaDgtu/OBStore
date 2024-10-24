@@ -15,6 +15,7 @@ type AssemblyOrderDetails struct {
 	SumArticle      float64 `gorm:"column:sum_article" json:"sum_article"`
 	Srok            string  `gorm:"column:srok" json:"srok"`
 	Partia          string  `gorm:"column:partia" json:"partia"`
+	Mark            string  `gorm:"column:mark" json:"mark"`
 }
 
 func (AssemblyOrderDetails) TableName() string {
