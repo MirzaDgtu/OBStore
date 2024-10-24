@@ -11,10 +11,10 @@
 [GIN-debug] GET    /favicon.png              --> obstore/internal/apiserver.(*server).configureRouter.(*RouterGroup).StaticFile.func1 (4 handlers)
 [GIN-debug] HEAD   /favicon.png              --> obstore/internal/apiserver.(*server).configureRouter.(*RouterGroup).StaticFile.func1 (4 handlers)
 [GIN-debug] Loaded HTML Templates (4): 
-	- 
 	- loginStyle.css
 	- loginScript.js
 	- login.html
+	- 
 
 [GIN-debug] POST   /api/v1/user/signout      --> obstore/internal/apiserver.(*server).SignOutUserById-fm (5 handlers)
 [GIN-debug] POST   /api/v1/user/update       --> obstore/internal/apiserver.(*server).UpdateUser-fm (5 handlers)
@@ -71,46 +71,13 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-[GIN] 2024/10/23 - 13:32:14 | 202 |      98.113ms |             ::1 | POST     "/api/v1/user/signout"
+[GIN] 2024/10/23 - 14:47:56 | 200 |     121.406ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/23 - 14:48:15 | 200 |     92.0553ms |     172.16.4.23 | POST     "/api/v1/users/password/restore"
+[GIN] 2024/10/23 - 14:48:21 | 200 |    138.3523ms |     172.16.4.23 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/23 - 14:48:21 | 200 |     28.7177ms |     172.16.4.23 | GET      "/api/v1/orders"
+[GIN] 2024/10/23 - 14:48:37 | 200 |     90.6983ms |     172.16.4.23 | POST     "/api/v1/user/update/pass"
+[GIN] 2024/10/23 - 14:48:37 | 200 |     28.4245ms |     172.16.4.23 | GET      "/api/v1/orders"
+[GIN] 2024/10/23 - 14:48:39 | 201 |     18.9872ms |     172.16.4.23 | GET      "/api/v1/teams"
+[GIN] 2024/10/23 - 14:48:41 | 200 |     29.4921ms |     172.16.4.23 | GET      "/api/v1/orders"
 [GIN-debug] [WARNING] Headers were already written. Wanted to override status code 401 with 500
-[GIN] 2024/10/23 - 13:38:43 | 401 |       9.701ms |   172.16.55.175 | POST     "/api/v1/user/signout"
-[GIN-debug] [WARNING] Headers were already written. Wanted to override status code 401 with 500
-[GIN] 2024/10/23 - 13:38:50 | 401 |     13.0797ms |   172.16.55.175 | POST     "/api/v1/user/signout"
-[GIN] 2024/10/23 - 13:38:56 | 200 |    114.8702ms |   172.16.55.175 | POST     "/api/v1/users/password/restore"
-[GIN] 2024/10/23 - 13:39:00 | 500 |     72.3604ms |   172.16.55.175 | POST     "/api/v1/users/signin"
-[GIN-debug] [WARNING] Headers were already written. Wanted to override status code 401 with 500
-[GIN] 2024/10/23 - 13:47:47 | 401 |      4.7879ms |             ::1 | POST     "/api/v1/user/signout"
-[GIN-debug] [WARNING] Headers were already written. Wanted to override status code 401 with 500
-[GIN] 2024/10/23 - 13:48:18 | 401 |      8.0205ms |             ::1 | POST     "/api/v1/user/signout"
-[GIN] 2024/10/23 - 13:48:27 | 200 |    127.4513ms |             ::1 | POST     "/api/v1/users/password/restore"
-[GIN] 2024/10/23 - 13:48:42 | 200 |    138.6263ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/23 - 13:49:12 | 200 |    166.8575ms |             ::1 | POST     "/api/v1/user/update/pass"
-[GIN] 2024/10/23 - 13:49:19 | 200 |     159.729ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/23 - 13:50:30 | 200 |    202.8217ms |   172.16.55.175 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/23 - 14:00:43 | 200 |    125.6262ms |     172.16.4.23 | POST     "/api/v1/users/password/restore"
-[GIN] 2024/10/23 - 14:00:46 | 500 |    152.4352ms |     172.16.4.23 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/23 - 14:00:52 | 500 |    130.9521ms |     172.16.4.23 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/23 - 14:01:14 | 200 |    149.2939ms |     172.16.4.23 | POST     "/api/v1/users/password/restore"
-[GIN] 2024/10/23 - 14:01:17 | 200 |    155.1443ms |     172.16.4.23 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/23 - 14:01:36 | 200 |    154.2379ms |     172.16.4.23 | POST     "/api/v1/users/password/restore"
-[GIN] 2024/10/23 - 14:01:39 | 200 |    178.6244ms |     172.16.4.23 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/23 - 14:01:39 | 200 |     23.3144ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/23 - 14:01:47 | 200 |    191.6926ms |     172.16.4.23 | POST     "/api/v1/user/update/pass"
-[GIN] 2024/10/23 - 14:01:47 | 200 |     27.9892ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/23 - 14:02:06 | 200 |    171.6896ms |     172.16.4.23 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/23 - 14:02:06 | 200 |      24.499ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/23 - 14:02:09 | 200 |     28.5221ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/23 - 14:03:20 | 200 |    135.8762ms |     172.16.4.23 | POST     "/api/v1/users/password/restore"
-[GIN] 2024/10/23 - 14:03:24 | 200 |    154.1288ms |     172.16.4.23 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/23 - 14:03:25 | 200 |     26.2571ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN] 2024/10/23 - 14:03:50 | 200 |    183.6235ms |     172.16.4.23 | POST     "/api/v1/user/update/pass"
-[GIN] 2024/10/23 - 14:03:50 | 200 |     24.8969ms |     172.16.4.23 | GET      "/api/v1/orders"
-[GIN-debug] [WARNING] Headers were already written. Wanted to override status code 401 with 500
-[GIN] 2024/10/23 - 14:03:59 | 401 |      4.4066ms |             ::1 | POST     "/api/v1/user/signout"
-[GIN] 2024/10/23 - 14:17:25 | 200 |    149.8429ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/23 - 14:26:57 | 200 |    189.8191ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/23 - 14:39:33 | 500 |     10.9957ms |             ::1 | POST     "/api/v1/users/password/restore"
-[GIN] 2024/10/23 - 14:39:39 | 200 |    123.5611ms |             ::1 | POST     "/api/v1/users/password/restore"
-[GIN] 2024/10/23 - 14:39:48 | 200 |    137.2816ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/23 - 14:39:58 | 200 |    120.9812ms |             ::1 | POST     "/api/v1/user/update/pass"
-[GIN] 2024/10/23 - 14:40:06 | 200 |    176.9069ms |             ::1 | POST     "/api/v1/users/signin"
+[GIN] 2024/10/23 - 14:49:31 | 401 |      5.9121ms |             ::1 | POST     "/api/v1/user/signout"
