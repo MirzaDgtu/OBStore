@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"obstore/internal/model"
 	"obstore/internal/store"
+	"strconv"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -85,6 +86,7 @@ func (s *server) configureRouter() {
 			userGroup.POST("/signout", s.SignOutUserById)
 			userGroup.POST("/update", s.UpdateUser)
 			userGroup.POST("/update/pass", s.UpdatePassword)
+
 		}
 
 		usersGroup := apiGroup.Group("/users")
@@ -93,6 +95,7 @@ func (s *server) configureRouter() {
 			usersGroup.POST("/signin", s.SignIn)
 			usersGroup.GET("", s.GetUserAll)
 			usersGroup.POST("/password/restore", s.SetUserTemporaryPassword)
+			usersGroup.POST("/:id/block/:blocked", s.BlockedUser)
 		}
 
 		teamGroup := apiGroup.Group("/team", s.AuthMW)
@@ -131,7 +134,7 @@ func (s *server) configureRouter() {
 			orderGroup.GET("/find/num", s.GetOrderByFolioNum)
 		}
 
-		ordersGroup := apiGroup.Group("/orders", s.AuthMW)
+		ordersGroup := apiGroup.Group("/orders") // ,s.AuthMW
 		{
 			ordersGroup.POST("", s.CreateOrder)
 			ordersGroup.GET("", s.GetOrdersAll)
@@ -327,8 +330,8 @@ func (s *server) UpdateUser(ctx *gin.Context) {
 
 func (s *server) UpdatePassword(ctx *gin.Context) {
 	type request struct {
-		Id   int    `json:"id" validate:"required"`
-		Pass string `json:"pass" validate:"required"`
+		ID       int    `json:"id" validate:"required"`
+		Password string `json:"password" validate:"required"`
 	}
 
 	var req request
@@ -338,7 +341,7 @@ func (s *server) UpdatePassword(ctx *gin.Context) {
 		return
 	}
 
-	err = s.store.User().ChangePassword(req.Id, req.Pass)
+	err = s.store.User().ChangePassword(req.ID, req.Password)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -439,6 +442,37 @@ func (s *server) AuthMW(ctx *gin.Context) {
 	ctx.Set("user", user)
 
 	ctx.Next()
+}
+
+func (s *server) BlockedUser(ctx *gin.Context) {
+	pId := ctx.Param("id")
+	pBlocked := ctx.Param("blocked")
+
+	ID, err := strconv.Atoi(pId)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	Blocked, err := strconv.ParseBool(pBlocked)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+
+	err = s.store.User().BlockedByID(ID, Blocked)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	var msg string
+	if Blocked {
+		msg = "Пользователь " + pId + " заблокирован"
+	} else {
+		msg = "Пользователь " + pId + " разблокирован"
+	}
+	ctx.JSON(http.StatusOK, msg)
+
 }
 
 // Team...
