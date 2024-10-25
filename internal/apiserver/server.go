@@ -86,6 +86,7 @@ func (s *server) configureRouter() {
 			userGroup.POST("/signout", s.SignOutUserById)
 			userGroup.POST("/update", s.UpdateUser)
 			userGroup.POST("/update/pass", s.UpdatePassword)
+
 		}
 
 		usersGroup := apiGroup.Group("/users")
@@ -94,7 +95,7 @@ func (s *server) configureRouter() {
 			usersGroup.POST("/signin", s.SignIn)
 			usersGroup.GET("", s.GetUserAll)
 			usersGroup.POST("/password/restore", s.SetUserTemporaryPassword)
-			usersGroup.POST("/users/:id/block/*blocked", s.BlockedUserByID)
+			usersGroup.POST("/:id/block/", s.BlockedUser)
 		}
 
 		teamGroup := apiGroup.Group("/team", s.AuthMW)
@@ -133,7 +134,7 @@ func (s *server) configureRouter() {
 			orderGroup.GET("/find/num", s.GetOrderByFolioNum)
 		}
 
-		ordersGroup := apiGroup.Group("/orders", s.AuthMW)
+		ordersGroup := apiGroup.Group("/orders") // ,s.AuthMW
 		{
 			ordersGroup.POST("", s.CreateOrder)
 			ordersGroup.GET("", s.GetOrdersAll)
@@ -443,35 +444,36 @@ func (s *server) AuthMW(ctx *gin.Context) {
 	ctx.Next()
 }
 
-func (s *server) BlockedUserByID(ctx *gin.Context) {
-	pID := ctx.Param("id")
-	pBlocked := ctx.Param("bloked")
+func (s *server) BlockedUser(ctx *gin.Context) {
+	type request struct {
+		Blocked bool `json:"blocked"`
+	}
 
-	ID, err := strconv.Atoi(pID)
+	pId := ctx.Param("id")
+
+	ID, err := strconv.Atoi(pId)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
+		ctx.JSON(http.StatusBadGateway, gin.H{"error": err.Error()})
 		return
 	}
 
-	Blocked, err := strconv.ParseBool(pBlocked)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err})
-		return
-	}
+	var req request
+	ctx.ShouldBindJSON(&req)
 
-	err = s.store.User().BlockedByID(uint(ID), Blocked)
+	err = s.store.User().BlockedByID(ID, req.Blocked)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	var msg string
-	if Blocked == true {
-		msg = " заблокирован"
+	if req.Blocked {
+		msg = "Пользователь " + pId + " заблокирован"
 	} else {
-		msg = " разблокирован"
+		msg = "Пользователь " + pId + " разблокирован"
 	}
-	ctx.JSON(http.StatusOK, gin.H{"message": "Пользователь успешно " + msg})
+	ctx.JSON(http.StatusOK, msg)
+
 }
 
 // Team...

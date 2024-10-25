@@ -146,6 +146,6 @@ func (r *UserRepository) SetTemporaryPassword(email string) (string, error) {
 		"restore": true}).Error
 }
 
-func (r *UserRepository) BlockedByID(id uint, isBlocked bool) error {
-	return r.store.db.Model(&model.User{}).Update("blocked", isBlocked).Error
+func (r *UserRepository) BlockedByID(id int, isBlocked bool) error {
+	return r.store.db.Model(&model.User{}).Where("id=?", id).Update("blocked", isBlocked).Error
 }

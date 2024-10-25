@@ -14,5 +14,5 @@ type UserRepository interface {
 	UpdateToken(uint, string) error
 	UserFromID(float64) (model.User, error)
 	SetTemporaryPassword(string) (string, error)
-	BlockedByID(uint, bool) error
+	BlockedByID(int, bool) error
 }

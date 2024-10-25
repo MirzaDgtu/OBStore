@@ -11,10 +11,10 @@
 [GIN-debug] GET    /favicon.png              --> obstore/internal/apiserver.(*server).configureRouter.(*RouterGroup).StaticFile.func1 (4 handlers)
 [GIN-debug] HEAD   /favicon.png              --> obstore/internal/apiserver.(*server).configureRouter.(*RouterGroup).StaticFile.func1 (4 handlers)
 [GIN-debug] Loaded HTML Templates (4): 
+	- 
 	- loginStyle.css
 	- loginScript.js
 	- login.html
-	- 
 
 [GIN-debug] POST   /api/v1/user/signout      --> obstore/internal/apiserver.(*server).SignOutUserById-fm (5 handlers)
 [GIN-debug] POST   /api/v1/user/update       --> obstore/internal/apiserver.(*server).UpdateUser-fm (5 handlers)
@@ -23,7 +23,7 @@
 [GIN-debug] POST   /api/v1/users/signin      --> obstore/internal/apiserver.(*server).SignIn-fm (4 handlers)
 [GIN-debug] GET    /api/v1/users             --> obstore/internal/apiserver.(*server).GetUserAll-fm (4 handlers)
 [GIN-debug] POST   /api/v1/users/password/restore --> obstore/internal/apiserver.(*server).SetUserTemporaryPassword-fm (4 handlers)
-[GIN-debug] POST   /api/v1/users/users/:id/block/*blocked --> obstore/internal/apiserver.(*server).BlockedUserByID-fm (4 handlers)
+[GIN-debug] POST   /api/v1/users/:id/block/  --> obstore/internal/apiserver.(*server).BlockedUser-fm (4 handlers)
 [GIN-debug] GET    /api/v1/team              --> obstore/internal/apiserver.(*server).GetTeamById-fm (5 handlers)
 [GIN-debug] POST   /api/v1/team/delete       --> obstore/internal/apiserver.(*server).DeteleTeamById-fm (5 handlers)
 [GIN-debug] POST   /api/v1/team/update       --> obstore/internal/apiserver.(*server).UpdateTeam-fm (5 handlers)
@@ -39,11 +39,11 @@
 [GIN-debug] GET    /api/v1/order/find/id     --> obstore/internal/apiserver.(*server).GetOrderById-fm (5 handlers)
 [GIN-debug] GET    /api/v1/order/find/uid    --> obstore/internal/apiserver.(*server).GetOrderByUID-fm (5 handlers)
 [GIN-debug] GET    /api/v1/order/find/num    --> obstore/internal/apiserver.(*server).GetOrderByFolioNum-fm (5 handlers)
-[GIN-debug] POST   /api/v1/orders            --> obstore/internal/apiserver.(*server).CreateOrder-fm (5 handlers)
-[GIN-debug] GET    /api/v1/orders            --> obstore/internal/apiserver.(*server).GetOrdersAll-fm (5 handlers)
-[GIN-debug] GET    /api/v1/orders/range      --> obstore/internal/apiserver.(*server).GetOrdersByDateRange-fm (5 handlers)
-[GIN-debug] GET    /api/v1/orders/driver     --> obstore/internal/apiserver.(*server).GetOrdersByDriver-fm (5 handlers)
-[GIN-debug] GET    /api/v1/orders/agent      --> obstore/internal/apiserver.(*server).GetOrdersByAgent-fm (5 handlers)
+[GIN-debug] POST   /api/v1/orders            --> obstore/internal/apiserver.(*server).CreateOrder-fm (4 handlers)
+[GIN-debug] GET    /api/v1/orders            --> obstore/internal/apiserver.(*server).GetOrdersAll-fm (4 handlers)
+[GIN-debug] GET    /api/v1/orders/range      --> obstore/internal/apiserver.(*server).GetOrdersByDateRange-fm (4 handlers)
+[GIN-debug] GET    /api/v1/orders/driver     --> obstore/internal/apiserver.(*server).GetOrdersByDriver-fm (4 handlers)
+[GIN-debug] GET    /api/v1/orders/agent      --> obstore/internal/apiserver.(*server).GetOrdersByAgent-fm (4 handlers)
 [GIN-debug] GET    /api/v1/teamcomposition/  --> obstore/internal/apiserver.(*server).GetTeamCompositionById-fm (5 handlers)
 [GIN-debug] POST   /api/v1/teamcomposition/update --> obstore/internal/apiserver.(*server).UpdateTeamComposition-fm (5 handlers)
 [GIN-debug] GET    /api/v1/teamcomposition/team --> obstore/internal/apiserver.(*server).GetTeamCompositionByTeamId-fm (5 handlers)
@@ -72,10 +72,19 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-[GIN] 2024/10/24 - 22:47:46 | 404 |            0s |             ::1 | POST     "/api/v1/users/3/block"
-[GIN] 2024/10/24 - 22:47:54 | 200 |     62.8832ms |             ::1 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/24 - 22:47:59 | 404 |            0s |             ::1 | POST     "/api/v1/users/3/block"
-[GIN] 2024/10/24 - 22:48:07 | 404 |            0s |             ::1 | POST     "/api/v1/users/3/block?blocked=true"
-[GIN] 2024/10/24 - 22:48:13 | 404 |            0s |             ::1 | POST     "/api/v1/users/3/block/?blocked=true"
-[GIN] 2024/10/24 - 22:48:18 | 404 |            0s |             ::1 | POST     "/api/v1/users/3/block/blocked=true"
-[GIN] 2024/10/24 - 22:49:08 | 404 |            0s |             ::1 | POST     "/api/v1/users/3/block"
+[GIN] 2024/10/26 - 01:43:33 | 200 |      5.6368ms |             ::1 | POST     "/api/v1/users/2/block/"
+[GIN] 2024/10/26 - 01:43:33 | 200 |      3.5514ms |             ::1 | GET      "/api/v1/users"
+[GIN] 2024/10/26 - 01:43:36 | 200 |      3.1513ms |             ::1 | POST     "/api/v1/users/2/block/"
+[GIN] 2024/10/26 - 01:43:36 | 200 |      4.0805ms |             ::1 | GET      "/api/v1/users"
+[GIN] 2024/10/26 - 01:43:37 | 200 |      2.3392ms |             ::1 | POST     "/api/v1/users/2/block/"
+[GIN] 2024/10/26 - 01:43:37 | 200 |      5.7633ms |             ::1 | GET      "/api/v1/users"
+[GIN] 2024/10/26 - 01:43:37 | 200 |      1.8824ms |             ::1 | POST     "/api/v1/users/3/block/"
+[GIN] 2024/10/26 - 01:43:37 | 200 |       2.186ms |             ::1 | GET      "/api/v1/users"
+[GIN] 2024/10/26 - 01:43:38 | 200 |      4.2117ms |             ::1 | POST     "/api/v1/users/3/block/"
+[GIN] 2024/10/26 - 01:43:38 | 200 |      3.7784ms |             ::1 | GET      "/api/v1/users"
+[GIN] 2024/10/26 - 01:43:39 | 200 |      1.8757ms |             ::1 | POST     "/api/v1/users/1/block/"
+[GIN] 2024/10/26 - 01:43:39 | 200 |      4.7525ms |             ::1 | GET      "/api/v1/users"
+[GIN] 2024/10/26 - 01:43:39 | 200 |      2.4526ms |             ::1 | POST     "/api/v1/users/1/block/"
+[GIN] 2024/10/26 - 01:43:39 | 200 |     11.1338ms |             ::1 | GET      "/api/v1/users"
+[GIN] 2024/10/26 - 01:43:40 | 200 |      1.6849ms |             ::1 | POST     "/api/v1/users/3/block/"
+[GIN] 2024/10/26 - 01:43:40 | 200 |      2.8564ms |             ::1 | GET      "/api/v1/users"
