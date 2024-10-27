@@ -29,3 +29,11 @@ func (r *AssemblyOrderRepository) ByOrderID(orderid uint) (ao model.AssemblyOrde
 func (r *AssemblyOrderRepository) ByUserID(userid uint) (aos []model.AssemblyOrder, err error) {
 	return aos, r.store.db.Where("user_id=?", userid).Find(&aos).Error
 }
+
+func (r *AssemblyOrderRepository) All() (aos []model.AssemblyOrder, err error) {
+	return aos, r.store.db.Find(&aos).Error
+}
+
+func (r *AssemblyOrderRepository) ByDateRange(dtStart, dtFinish string) (aos []model.AssemblyOrder, err error) {
+	return aos, r.store.db.Where("date_doc between ? and ?", dtStart, dtFinish).Find(&aos).Error
+}

@@ -166,6 +166,7 @@ func (s *server) configureRouter() {
 		assemblyOrdersGroup := apiGroup.Group("/assemblyorders", s.AuthMW)
 		{
 			assemblyOrdersGroup.POST("", s.CreateAssemblyOrder)
+			assemblyOrdersGroup.GET("", s.GetAllAssemblyOrders)
 		}
 
 		warehousesGroup := apiGroup.Group("/warehouses", s.AuthMW)
@@ -1070,6 +1071,16 @@ func (s *server) CreateAssemblyOrder(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, ao)
+}
+
+func (s *server) GetAllAssemblyOrders(ctx *gin.Context) {
+	aos, err := s.store.AssemblyOrder().All()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, aos)
 }
 
 // Warehiuses
