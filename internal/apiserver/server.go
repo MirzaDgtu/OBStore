@@ -38,14 +38,14 @@ func newServer(store store.Store) *server {
 
 	s.router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000"}, // ваш домен React
-		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length", "application/json"},
 		AllowCredentials: true,
 		AllowOriginFunc: func(origin string) bool {
 			return origin == "http://localhost:3000" // замените на ваш домен React
 		},
-		MaxAge: 24 * time.Hour,
+		MaxAge: 12 * time.Hour,
 	}))
 
 	// Настройка CORS
@@ -83,9 +83,10 @@ func (s *server) configureRouter() {
 	{
 		userGroup := apiGroup.Group("/user", s.AuthMW)
 		{
-			userGroup.POST("/signout", s.SignOutUserById)
+			userGroup.POST("/signout/:id", s.SignOutUserById)
 			userGroup.POST("/update", s.UpdateUser)
 			userGroup.POST("/update/pass", s.UpdatePassword)
+			userGroup.POST("/:id/block/", s.BlockedUser)
 
 		}
 
@@ -95,7 +96,6 @@ func (s *server) configureRouter() {
 			usersGroup.POST("/signin", s.SignIn)
 			usersGroup.GET("", s.GetUserAll)
 			usersGroup.POST("/password/restore", s.SetUserTemporaryPassword)
-			usersGroup.POST("/:id/block/", s.BlockedUser)
 		}
 
 		teamGroup := apiGroup.Group("/team", s.AuthMW)
@@ -290,18 +290,29 @@ func (s *server) SignIn(ctx *gin.Context) {
 }
 
 func (s *server) SignOutUserById(ctx *gin.Context) {
-	type request struct {
-		Id int `json:"id"`
-	}
 
-	var req request
-	err := ctx.ShouldBindJSON(&req)
+	/*
+		type request struct {
+			Id int `json:"id"`
+		}
+
+
+		var req request
+		err := ctx.ShouldBindJSON(&req)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+	*/
+
+	pID := ctx.Param("id")
+	ID, err := strconv.Atoi(pID)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	err = s.store.User().SignOutUserById(req.Id)
+	err = s.store.User().SignOutUserById(ID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
