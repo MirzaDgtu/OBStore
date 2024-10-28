@@ -72,5 +72,13 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-[GIN] 2024/10/28 - 07:52:00 | 200 |    121.2774ms |    172.16.4.108 | POST     "/api/v1/users/signin"
-[GIN] 2024/10/28 - 07:52:01 | 200 |     14.7657ms |    172.16.4.108 | GET      "/api/v1/orders"
+[GIN] 2024/10/28 - 01:16:47 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
+[GIN] 2024/10/28 - 01:16:47 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
+[GIN] 2024/10/28 - 01:16:47 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
+[GIN] 2024/10/28 - 01:16:47 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
+[GIN] 2024/10/28 - 01:16:54 | 200 |       3.489ms |             ::1 | GET      "/api/v1/orders"
+[GIN] 2024/10/28 - 01:16:54 | 200 |       1.584ms |             ::1 | GET      "/api/v1/orders"
+[GIN] 2024/10/28 - 01:17:01 | 200 |      1.1024ms |             ::1 | GET      "/api/v1/orders"
+[GIN] 2024/10/28 - 01:17:01 | 200 |      1.6282ms |             ::1 | GET      "/api/v1/orders"
+[GIN] 2024/10/28 - 01:17:39 | 200 |           4ms |             ::1 | GET      "/api/v1/users"
+[GIN] 2024/10/28 - 01:17:39 | 200 |      5.0015ms |             ::1 | GET      "/api/v1/users"
