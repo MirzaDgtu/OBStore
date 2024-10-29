@@ -52,6 +52,7 @@
 [GIN-debug] GET    /api/v1/teamcompositions  --> obstore/internal/apiserver.(*server).GetTeamCompositionAll-fm (5 handlers)
 [GIN-debug] GET    /api/v1/assemblyorder/find/id --> obstore/internal/apiserver.(*server).GetAssemblyOrderByID-fm (5 handlers)
 [GIN-debug] POST   /api/v1/assemblyorders    --> obstore/internal/apiserver.(*server).CreateAssemblyOrder-fm (5 handlers)
+[GIN-debug] GET    /api/v1/assemblyorders    --> obstore/internal/apiserver.(*server).GetAllAssemblyOrders-fm (5 handlers)
 [GIN-debug] GET    /api/v1/warehouses        --> obstore/internal/apiserver.(*server).GetWarehouseAll-fm (5 handlers)
 [GIN-debug] POST   /api/v1/warehouses        --> obstore/internal/apiserver.(*server).CreateWarehouse-fm (5 handlers)
 [GIN-debug] GET    /api/v1/warehouse/find/id --> obstore/internal/apiserver.(*server).GetWarehouseById-fm (5 handlers)
@@ -72,13 +73,15 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8090
-[GIN] 2024/10/28 - 01:16:47 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/28 - 01:16:47 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/28 - 01:16:47 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
-[GIN] 2024/10/28 - 01:16:47 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
-[GIN] 2024/10/28 - 01:16:54 | 200 |       3.489ms |             ::1 | GET      "/api/v1/orders"
-[GIN] 2024/10/28 - 01:16:54 | 200 |       1.584ms |             ::1 | GET      "/api/v1/orders"
-[GIN] 2024/10/28 - 01:17:01 | 200 |      1.1024ms |             ::1 | GET      "/api/v1/orders"
-[GIN] 2024/10/28 - 01:17:01 | 200 |      1.6282ms |             ::1 | GET      "/api/v1/orders"
-[GIN] 2024/10/28 - 01:17:39 | 200 |           4ms |             ::1 | GET      "/api/v1/users"
-[GIN] 2024/10/28 - 01:17:39 | 200 |      5.0015ms |             ::1 | GET      "/api/v1/users"
+[GIN] 2024/10/29 - 21:16:57 | 200 |      4.8715ms |             ::1 | GET      "/api/v1/users"
+[GIN] 2024/10/29 - 21:16:57 | 200 |      3.7272ms |             ::1 | GET      "/api/v1/users"
+[GIN] 2024/10/29 - 21:18:43 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
+[GIN] 2024/10/29 - 21:18:43 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
+[GIN] 2024/10/29 - 21:18:43 | 200 |      6.9816ms |             ::1 | GET      "/api/v1/orders"
+[GIN] 2024/10/29 - 21:19:09 | 201 |     81.6433ms |             ::1 | POST     "/api/v1/orders"
+[GIN] 2024/10/29 - 21:19:20 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
+[GIN] 2024/10/29 - 21:19:20 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
+[GIN] 2024/10/29 - 21:19:20 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/stats"
+[GIN] 2024/10/29 - 21:19:20 | 404 |            0s |             ::1 | GET      "/api/v1/warehouse/pickers"
+[GIN] 2024/10/29 - 21:19:20 | 200 |      5.4387ms |             ::1 | GET      "/api/v1/orders"
+[GIN] 2024/10/29 - 21:19:20 | 200 |       5.207ms |             ::1 | GET      "/api/v1/orders"
