@@ -36,20 +36,49 @@ func newServer(store store.Store) *server {
 
 	s.router.Use()
 
-	s.router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"}, // ваш домен React
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length", "application/json"},
-		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			return origin == "http://localhost:3000" // замените на ваш домен React
-		},
-		MaxAge: 12 * time.Hour,
-	}))
+	s.router.Use(func(ctx *gin.Context) {
+		fmt.Println("Запрос с сайта: ", ctx.Request.Header.Get("Origin"))
+		ctx.Next()
+	})
 
+	/*
+		s.router.Use(cors.New(cors.Config{
+
+			AllowOrigins: []string{
+				"http://localhost:3000",
+			}, // ваш домен React // ""
+
+			AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+			AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "Cookie"},
+			ExposeHeaders:    []string{"Content-Length", "application/json"},
+			AllowCredentials: true,
+
+			AllowOriginFunc: func(origin string) bool {
+				return origin == "http://localhost:3000" // замените на ваш домен React
+
+				//		return true
+			},
+
+			MaxAge: 12 * time.Hour,
+		}))
+
+	*/
 	// Настройка CORS
 	//s.router.Use(CORSMiddleware())
+
+	confCors := cors.DefaultConfig()
+	confCors.AllowOrigins = []string{
+		"http://localhost:3000",
+		"http://172.16.1.170:3000",
+		"nor.ru:3000",
+	}
+	confCors.AllowMethods = []string{"POST", "GET", "PUT", "OPTIONS"}
+	confCors.AllowHeaders = []string{"Origin", "Content-Type", "Authorization", "Accept", "User-Agent", "Cache-Control", "Pragma"}
+	confCors.ExposeHeaders = []string{"Content-Length"}
+	confCors.AllowCredentials = true
+	confCors.MaxAge = 12 * time.Hour
+
+	s.router.Use(cors.New(confCors))
 
 	s.configureRouter()
 
@@ -87,7 +116,6 @@ func (s *server) configureRouter() {
 			userGroup.POST("/update", s.UpdateUser)
 			userGroup.POST("/update/pass", s.UpdatePassword)
 			userGroup.POST("/:id/block/", s.BlockedUser)
-
 		}
 
 		usersGroup := apiGroup.Group("/users")

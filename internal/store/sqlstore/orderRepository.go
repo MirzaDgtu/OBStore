@@ -19,7 +19,6 @@ func (r *OrderRepository) Update(u model.Order) (order model.Order, err error) {
 }
 
 func (r *OrderRepository) All() (orders []model.Order, err error) {
-
 	return orders, r.store.db.Preload("OrderDetails").Find(&orders).Error
 }
 

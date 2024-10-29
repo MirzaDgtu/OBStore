@@ -19,7 +19,7 @@ func (r *AssemblyOrderRepository) Delete(id uint) error {
 }
 
 func (r *AssemblyOrderRepository) ByID(id uint) (ao model.AssemblyOrder, err error) {
-	return ao, r.store.db.Model(&model.AssemblyOrder{}).Preload("assemblyorder_details").First(&ao, id).Error
+	return ao, r.store.db.Model(&model.AssemblyOrder{}).Preload("OrderDetails").First(&ao, id).Error
 }
 
 func (r *AssemblyOrderRepository) ByOrderID(orderid uint) (ao model.AssemblyOrder, err error) {
