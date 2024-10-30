@@ -36,20 +36,54 @@ func newServer(store store.Store) *server {
 
 	s.router.Use()
 
-	s.router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"}, // ваш домен React
-		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length", "application/json"},
-		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			return origin == "http://localhost:3000" // замените на ваш домен React
-		},
-		MaxAge: 24 * time.Hour,
-	}))
+	s.router.Use(func(ctx *gin.Context) {
+		fmt.Println("Запрос с сайта: ", ctx.Request.Header.Get("Origin"))
+		ctx.Next()
+	})
 
+	/*
+		s.router.Use(cors.New(cors.Config{
+
+			AllowOrigins: []string{
+				"http://localhost:3000",
+			}, // ваш домен React // ""
+
+			AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+			AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization", "Cookie"},
+			ExposeHeaders:    []string{"Content-Length", "application/json"},
+			AllowCredentials: true,
+
+			AllowOriginFunc: func(origin string) bool {
+				return origin == "http://localhost:3000" // замените на ваш домен React
+
+				//		return true
+			},
+
+			MaxAge: 12 * time.Hour,
+		}))
+
+	*/
 	// Настройка CORS
 	//s.router.Use(CORSMiddleware())
+
+	confCors := cors.DefaultConfig()
+
+	/*	confCors.AllowOrigins = []string{
+			"http://localhost:3000",
+			"http://172.16.1.170:3000",
+			"http://nor.ru:3000",
+		}
+	*/
+	confCors.AllowMethods = []string{"POST", "GET", "PUT", "OPTIONS"}
+	confCors.AllowHeaders = []string{"Origin", "Content-Type", "Authorization", "Accept", "User-Agent", "Cache-Control", "Pragma"}
+	confCors.ExposeHeaders = []string{"Content-Length"}
+	confCors.AllowCredentials = true
+	confCors.MaxAge = 12 * time.Hour
+	confCors.AllowOriginFunc = func(origin string) bool {
+		return true
+	}
+
+	s.router.Use(cors.New(confCors))
 
 	s.configureRouter()
 
@@ -83,10 +117,10 @@ func (s *server) configureRouter() {
 	{
 		userGroup := apiGroup.Group("/user", s.AuthMW)
 		{
-			userGroup.POST("/signout", s.SignOutUserById)
+			userGroup.POST("/signout/", s.SignOutUserById)
 			userGroup.POST("/update", s.UpdateUser)
 			userGroup.POST("/update/pass", s.UpdatePassword)
-
+			userGroup.POST("/:id/block/", s.BlockedUser)
 		}
 
 		usersGroup := apiGroup.Group("/users")
@@ -95,7 +129,6 @@ func (s *server) configureRouter() {
 			usersGroup.POST("/signin", s.SignIn)
 			usersGroup.GET("", s.GetUserAll)
 			usersGroup.POST("/password/restore", s.SetUserTemporaryPassword)
-			usersGroup.POST("/:id/block/", s.BlockedUser)
 		}
 
 		teamGroup := apiGroup.Group("/team", s.AuthMW)
@@ -129,7 +162,7 @@ func (s *server) configureRouter() {
 
 		orderGroup := apiGroup.Group("/order", s.AuthMW)
 		{
-			orderGroup.GET("/find/id", s.GetOrderById)
+			orderGroup.GET("/find/id/", s.GetOrderById)
 			orderGroup.GET("/find/uid", s.GetOrderByUID)
 			orderGroup.GET("/find/num", s.GetOrderByFolioNum)
 		}
@@ -291,18 +324,14 @@ func (s *server) SignIn(ctx *gin.Context) {
 }
 
 func (s *server) SignOutUserById(ctx *gin.Context) {
-	type request struct {
-		Id int `json:"id"`
-	}
-
-	var req request
-	err := ctx.ShouldBindJSON(&req)
+	pID := ctx.Query("id")
+	ID, err := strconv.Atoi(pID)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	err = s.store.User().SignOutUserById(req.Id)
+	err = s.store.User().SignOutUserById(ID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -760,30 +789,20 @@ func (s *server) CreateOrder(ctx *gin.Context) {
 }
 
 func (s *server) GetOrderById(ctx *gin.Context) {
-	type request struct {
-		Id int `json:"id"`
-	}
-
-	var reqs []request
-	err := ctx.ShouldBindJSON(&reqs)
+	pID := ctx.Query("id")
+	ID, err := strconv.Atoi(pID)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var orders []model.Order
-
-	for _, req := range reqs {
-		order, err := s.store.Order().ById(req.Id)
-		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			continue
-		} else {
-			orders = append(orders, order)
-		}
+	order, err := s.store.Order().ById(ID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
-	ctx.JSON(http.StatusOK, orders)
+	ctx.JSON(http.StatusOK, order)
 }
 
 func (s *server) GetOrderByUID(ctx *gin.Context) {

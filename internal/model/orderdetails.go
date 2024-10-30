@@ -1,27 +1,25 @@
 package model
 
 import (
-	"time"
-
 	"gorm.io/gorm"
 )
 
 type OrderDetails struct {
 	gorm.Model
-	OrderId     int        `gorm:"column:orderid" json:"order_id"`
-	OrderUID    int        `gorm:"column:orderuid" json:"order_uid"`
-	Articul     string     `gorm:"column:articul" json:"articul"`
-	NameArticul string     `gorm:"column:nameArticul" json:"name_articul"`
-	Qty         float64    `gorm:"column:qty" json:"qty"`
-	QtySbor     float64    `gorm:"column:qtySbor" json:"qty_sbor"`
-	Cena        float64    `gorm:"column:cena" json:"cena"`
-	Discount    float64    `gorm:"column:discount" json:"discount"`
-	SumArtucul  float64    `gorm:"column:sumartucul" json:"sum_artucul"`
-	FinishAt    *time.Time `gorm:"column:finishat" json:"finish_at"`
-	Srok        string     `gorm:"column:srok" json:"Srok"`
-	Partia      string     `gorm:"column:partia" json:"Partia"`
-	Marka       string     `gorm:"column:marka" json:"marka"`
-	Done        bool       `gorm:"column:done" json:"done"`
+	OrderId     int     `gorm:"column:orderid" json:"order_id"`
+	OrderUID    int     `gorm:"column:order_uid" json:"order_uid"`
+	Article     string  `gorm:"column:article" json:"article"`
+	NameArticle string  `gorm:"column:name_article" json:"name_article"`
+	Strikecode  string  `gorm:"column:strikecode" json:"strikecode"`
+	Qty         float64 `gorm:"column:qty" json:"qty"`
+	Cena        float64 `gorm:"column:cena" json:"cena"`
+	Discount    float64 `gorm:"column:discount" json:"discount"`
+	ArticleSum  float64 `gorm:"column:article_sum" json:"article_sum"`
+	FinishAt    string  `gorm:"column:finish_at" json:"finish_at"`
+	Srok        string  `gorm:"column:srok" json:"srok"`
+	Partia      string  `gorm:"column:partia" json:"partia"`
+	Marka       string  `gorm:"column:marka" json:"marka"`
+	Done        bool    `gorm:"column:done" json:"done"`
 }
 
 func (OrderDetails) TableName() string {
